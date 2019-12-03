@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+    "jsx": "react",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "paths": {
+      "@plexius/flower-core": ["packages/flower-core/src/index"],
+      "@plexius/flower-interfaces": ["packages/flower-interfaces/src/index"],
+      "@plexius/flower-nodes": ["packages/flower-nodes/src/index"],
+      "@plexius/flower-react-editor": ["packages/flower-react-editor/src/index"],
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "@plexius/flower",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A data-flow graph implementation based on rxjs observables with dynamically programmable nodes",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "serve": "webpack-dev-server --config webpack.dev.js --progress --colors --hot",
+    "compile": "lerna run compile",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "new-version": "lerna version --conventional-commits --yes",
+    "diff": "lerna diff"
+  },
+  "keywords": [
+    "rxjs",
+    "observables",
+    "node",
+    "flow",
+    "graph",
+    "typescript",
+    "library"
+  ],
+  "author": {
+    "name": "Peter Unger",
+    "email": "peter@pexius.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleXiusCH/flower"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "lit-html": "^1.1.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "rxjs": "^6.5.3"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.14",
+    "@types/react-dom": "^16.9.4",
+    "@types/styled-components": "^4.4.0",
+    "@types/uuid": "^3.4.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "lerna": "^3.19.0",
+    "styled-components": "^4.4.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-merge": "^4.2.2"
+  }
+}

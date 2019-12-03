@@ -1,0 +1,6 @@
+dist
+tmp
+node_modules
+*debug.log
+*error.log
+*.tsbuildinfo

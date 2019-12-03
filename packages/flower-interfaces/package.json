@@ -1,0 +1,31 @@
+{
+  "name": "@plexius/flower-interfaces",
+  "version": "1.0.0",
+  "description": "flower-interfaces",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
+  },
+  "author": {
+    "name": "Peter Unger",
+    "email": "peter@pexius.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleXiusCH/flower",
+    "directory": "packages/flower-interfaces"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.7.2"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.5.3"
+  }
+}

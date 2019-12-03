@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+  },
+  "references": [
+    { "path":  "../flower-core" } 
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

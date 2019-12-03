@@ -1,0 +1,12 @@
+{
+	"defaultSeverity": "warning",
+	"extends": "tslint:latest",
+	"jsRules": {},
+	"rules": {
+		"no-submodule-imports": false
+	},
+	"rulesDirectory": [],
+	"linterOptions": {
+		"exclude": ["**/node_modules/**"]
+	}
+}

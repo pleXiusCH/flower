@@ -1,0 +1,34 @@
+{
+  "name": "@plexius/flower-core",
+  "version": "0.0.1",
+  "description": "flower-core",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
+  },
+  "author": {
+    "name": "Peter Unger",
+    "email": "peter@pexius.ch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleXiusCH/flower",
+    "directory": "packages/flower-core"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "uuid": "^3.3.3"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.5.3"
+  }
+}
