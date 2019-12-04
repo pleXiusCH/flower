@@ -1,6 +1,6 @@
 import { INodeImpl } from "@plexius/flower-interfaces";
 import Graph from "@plexius/flower-core";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Nodes from './components/Nodes';
 
 export interface IEditorProps {
@@ -15,13 +15,6 @@ const Editor: React.SFC<IEditorProps> = (props) => {
     const impl: INodeImpl = props.implementations.find((impl) => impl.type === nodeType);
     graph.createNode(impl);
   }, [graph, props.implementations]);
-
-  /*
-  useEffect(() => {
-    
-  }, [graph]);
-  */
-
 
   return (
     <div>

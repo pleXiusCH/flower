@@ -1,8 +1,10 @@
 import { Node as FlowerNode } from '@plexius/flower-core';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Draggable from 'react-draggable';
 import styled from "styled-components";
 import { node } from 'prop-types';
+import Port from './Port';
+import { IPortSpec } from '@plexius/flower-interfaces';
 
 export interface NodeProps {
   node: FlowerNode,
@@ -31,12 +33,20 @@ const Head = styled.div`
   border-radius: 8px 8px 0 0;
 `;
 
-const ConnectorsContainer = styled.div`
+const PortsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   grid-gap: 1em;
   margin: 0;
+
+  & > div:nth-child(1) {
+    transform: translateX(-8px);
+  }
+
+  & > div:nth-child(2) {
+    transform: translateX(8px);
+  }
 `;
 
 const getInitialState = (spec: any) => {
@@ -47,29 +57,44 @@ const getInitialState = (spec: any) => {
   return state;
 };
 
+const renderPorts = (ports: IPortSpec = {}, nodeId: string, flipped: boolean = false) => {
+  return (
+    <div>
+      {Object.getOwnPropertyNames(ports).map((key) => (
+        <Port {...ports[key]} nodeId={nodeId} name={key} key={key} flipped={flipped} />
+      ))}
+    </div>
+  );
+};
+
 const Node: React.FC<NodeProps> = (props) => {
+  const sideEffectsContainer = useRef<HTMLDivElement>(null);
 
-  const sideEffectsComponent = useCallback(() => {
-    return (
-      <div>SEC</div>
-    );
-  }, [props.node]);
-  
-  /*const SEC = (Elem: any) => {
-    // return <Elem setState={setNodeState} getState={() => nodeState} inputs={mapToObject(inputsState[0])} />;
-  }*/
-
-  const handleDragEvent = () => {
-    if (typeof props.onDragEvent === 'function') {
-      props.onDragEvent(props.uuid);
+  useEffect(() => {
+    if (sideEffectsContainer.current) {
+      props.node.patchState({
+        renderTarget: sideEffectsContainer.current
+      });
     }
-  };
+  }, [sideEffectsContainer, props.node]);
+
+  const InputPorts = useCallback(() => {
+    return renderPorts(props.node.nodeImpl.inputs, props.uuid);
+  }, [props.node.nodeImpl.inputs, props.uuid]);
+
+  const OutputPorts = useCallback(() => {
+    return renderPorts(props.node.nodeImpl.outputs, props.uuid, true);
+  }, [props.node.nodeImpl.outputs, props.uuid]);
 
   return (
     <Draggable>
       <NodeElement>
-        <Head>{props.node.uuid}</Head>
-        {sideEffectsComponent}
+        <Head>{props.node.type}</Head>
+        <PortsContainer>
+          <InputPorts />
+          <OutputPorts />
+        </PortsContainer>
+        <div ref={sideEffectsContainer}></div>
       </NodeElement>
     </Draggable>
   );

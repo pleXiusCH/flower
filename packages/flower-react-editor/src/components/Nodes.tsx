@@ -14,9 +14,7 @@ const Nodes: React.SFC<NodeProps> = (props: NodeProps) => {
 
   return (
     <>
-      {[...nodes].map(([uuid, node]) => {
-        <Node uuid={uuid} node={node} key={uuid} />
-      })}
+      {[...nodes].map(([uuid, node]) => <Node uuid={uuid} node={node} key={uuid} />)}
     </>
   );
 

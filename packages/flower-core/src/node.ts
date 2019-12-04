@@ -40,7 +40,7 @@ export default class Node<T = any> {
   private outputs: NodeOutputs = new Map();
   readonly type: string;
 
-  constructor(private nodeImpl: INodeImpl<T>) {
+  constructor(readonly nodeImpl: INodeImpl<T>) {
     this.uuid = uuidv4();
     this.type = nodeImpl.type;
     nodeImpl.activationFunction &&

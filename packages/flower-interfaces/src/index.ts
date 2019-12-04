@@ -1,11 +1,18 @@
 import { BehaviorSubject, Observable, Observer, Subject } from "rxjs";
 
+export interface IPortSpec { 
+  [p: string]: { 
+    label: string, 
+    type: string 
+  }; 
+};
+
 export interface INodeImpl<T = any> {
   type: string;
   activationFunction?: ActivationFn<T>;
   sideEffectsFunction?: SideEffectsFn<T>;
-  inputs?: {};
-  outputs?: {};
+  inputs?: IPortSpec
+  outputs?: IPortSpec;
   initialState?: T;
 }
 
