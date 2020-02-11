@@ -2,6 +2,7 @@ import { INodeImpl } from "@plexius/flower-interfaces";
 import Graph from "@plexius/flower-core";
 import React, { useState, useCallback, useEffect } from "react";
 import Nodes from './components/Nodes';
+import { ControllerProvider } from './controller/ControllerContext';
 
 export interface IEditorProps {
   implementations: INodeImpl[]
@@ -18,12 +19,14 @@ const Editor: React.SFC<IEditorProps> = (props) => {
 
   return (
     <div>
-      {props.implementations.map((implementation, index) => {
-        return (
-        <button key={index} onClick={() => addNode(implementation.type)}>Add {implementation.type}</button>
-        );
-      })}
-      <Nodes nodes$={graph.getNodes$()} />
+      <ControllerProvider graph={graph}>
+        {props.implementations.map((implementation, index) => {
+          return (
+          <button key={index} onClick={() => addNode(implementation.type)}>Add {implementation.type}</button>
+          );
+        })}
+        <Nodes nodes$={graph.getNodes$()} />
+      </ControllerProvider>
     </div>
   );
 };
