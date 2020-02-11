@@ -5,7 +5,8 @@
     "rootDir": "./src",
   },
   "references": [
-    { "path":  "../flower-core" } 
+    { "path":  "../flower-core" },
+    { "path":  "../flower-interfaces" }
   ],
   "exclude": [
     "node_modules",

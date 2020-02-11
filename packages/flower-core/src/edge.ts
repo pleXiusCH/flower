@@ -38,10 +38,10 @@ export default class Edge<T = any> {
 
   private bindSourceObservable(from: IPortDescriptor) {
     const { events$ } = this;
-    if (from.nodeId && from.propertyName) {
+    if (from.nodeId && from.name) {
       this.dataSource$ = this.parentGraph
         .getNode(from.nodeId)
-        .getOutputObservable(from.propertyName);
+        .getOutputObservable(from.name);
       this.data$ = this.dataSource$.pipe(
         takeUntil(events$.pipe(filter((e) => e === EdgeEvent.ApplyModifier))),
       );
@@ -49,10 +49,10 @@ export default class Edge<T = any> {
   }
 
   private bindDataObservable(to: IPortDescriptor) {
-    if (to.nodeId && to.propertyName) {
+    if (to.nodeId && to.name) {
       this.parentGraph
         .getNode(to.nodeId)
-        .connectObservableToInput(this.data$, to.propertyName);
+        .connectObservableToInput(this.data$, to.name);
     }
   }
 }

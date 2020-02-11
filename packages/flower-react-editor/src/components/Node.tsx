@@ -4,7 +4,7 @@ import Draggable from 'react-draggable';
 import styled from "styled-components";
 import { node } from 'prop-types';
 import Port from './Port';
-import { IPortSpec } from '@plexius/flower-interfaces';
+import { IPortSpec, PortType } from '@plexius/flower-interfaces';
 
 export interface NodeProps {
   node: FlowerNode,
@@ -57,11 +57,11 @@ const getInitialState = (spec: any) => {
   return state;
 };
 
-const renderPorts = (ports: IPortSpec = {}, nodeId: string, flipped: boolean = false) => {
+const renderPorts = (ports: IPortSpec = {}, nodeId: string, type: PortType) => {
   return (
     <div>
       {Object.getOwnPropertyNames(ports).map((key) => (
-        <Port {...ports[key]} nodeId={nodeId} name={key} key={key} flipped={flipped} />
+        <Port {...ports[key]} nodeId={nodeId} name={key} key={key} type={type} />
       ))}
     </div>
   );
@@ -79,11 +79,11 @@ const Node: React.FC<NodeProps> = (props) => {
   }, [sideEffectsContainer, props.node]);
 
   const InputPorts = useCallback(() => {
-    return renderPorts(props.node.nodeImpl.inputs, props.uuid);
+    return renderPorts(props.node.nodeImpl.inputs, props.uuid, PortType.Input);
   }, [props.node.nodeImpl.inputs, props.uuid]);
 
   const OutputPorts = useCallback(() => {
-    return renderPorts(props.node.nodeImpl.outputs, props.uuid, true);
+    return renderPorts(props.node.nodeImpl.outputs, props.uuid, PortType.Output);
   }, [props.node.nodeImpl.outputs, props.uuid]);
 
   return (

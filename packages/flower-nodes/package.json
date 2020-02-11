@@ -24,5 +24,8 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@plexius/flower-interfaces": "^1.0.0"
   }
 }

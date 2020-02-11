@@ -26,6 +26,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@plexius/flower-interfaces": "^1.0.0",
     "uuid": "^3.3.3"
   },
   "peerDependencies": {

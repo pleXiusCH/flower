@@ -18,7 +18,7 @@ export interface INodeImpl<T = any> {
 
 export interface IPortDescriptor {
   nodeId: string;
-  propertyName: string;
+  name: string;
 }
 
 export interface IActivationProps<T = any> {
@@ -46,3 +46,8 @@ export type ConnectSubject = Subject<{
 export type ActivationObserver<T = any> = Observer<IActivationProps<T>>;
 
 export type NodeOutputs = Map<string, BehaviorSubject<any>>;
+
+export enum PortType {
+  Input = 'input', 
+  Output = 'output'
+};

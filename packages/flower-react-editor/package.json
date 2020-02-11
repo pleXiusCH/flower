@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@plexius/flower-core": "^0.0.1",
+    "@plexius/flower-interfaces": "^1.0.0",
     "react-draggable": "^4.1.0",
     "react-use": "^13.10.1"
   },

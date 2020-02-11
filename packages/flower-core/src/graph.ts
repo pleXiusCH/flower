@@ -41,4 +41,8 @@ export default class Graph {
   public getNodes$() {
     return this.nodes$.asObservable();
   }
+
+  public getEdges$() {
+    return this.edges$.asObservable();
+  }
 }
