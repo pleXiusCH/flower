@@ -42,6 +42,7 @@ export default class ConnectionsController implements ControllerInt<ConnectionsC
   private constructor() {
     this.currentGraph$.pipe(distinctUntilChanged()).subscribe((newGraph) => (newGraph && this.events$.next(Events.SetGraph)));
     this.portSelections$.subscribe(selections => this.createConnections(selections));
+    this.portSelections$.subscribe(selections => console.log("current selections", selections));
   }
 
   private createPortStatus$(descriptor: IPortDescriptor): BehaviorSubject<PortStatus> {
@@ -58,6 +59,8 @@ export default class ConnectionsController implements ControllerInt<ConnectionsC
     for(const inputPort of selections.input) {
       for (const outputPort of selections.output) {
         currentGraph.createEdge(outputPort, inputPort);
+        this.removeFromSelection(inputPort);
+        this.removeFromSelection(outputPort);
       }
     }
   }
@@ -72,7 +75,6 @@ export default class ConnectionsController implements ControllerInt<ConnectionsC
   }
 
   public redrawConnections(nodeUuid: string) {
-    console.log("should redraw all edges connected to the node");
     this.currentGraph$.getValue().getConnectedEdges$(nodeUuid).subscribe((edges) => {
       for(const edge of edges) {
         if(this.edgeUpdateFunctions.has(edge.uuid)) {
