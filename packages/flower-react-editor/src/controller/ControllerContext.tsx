@@ -1,6 +1,5 @@
 import React, { useContext, FC } from 'react';
 import ConnectionsController from './ConnectionsController';
-import { ProgressPlugin } from 'webpack';
 import Graph from '@plexius/flower-core/src';
 import ControllerInt from './ControllerInt';
 

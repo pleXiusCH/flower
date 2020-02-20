@@ -1,8 +1,9 @@
 import { INodeImpl } from "@plexius/flower-interfaces";
 import Graph from "@plexius/flower-core";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import Nodes from './components/Nodes';
 import { ControllerProvider } from './controller/ControllerContext';
+import Edges from "./components/Edges";
 
 export interface IEditorProps {
   implementations: INodeImpl[]
@@ -10,7 +11,7 @@ export interface IEditorProps {
 
 const Editor: React.SFC<IEditorProps> = (props) => {
 
-  const [graph, setGraph]: [Graph, React.Dispatch<Graph>] = useState(new Graph());
+  const [graph, setGraph] = useState(new Graph());
 
   const addNode = useCallback((nodeType: string) => {
     const impl: INodeImpl = props.implementations.find((impl) => impl.type === nodeType);
@@ -18,7 +19,7 @@ const Editor: React.SFC<IEditorProps> = (props) => {
   }, [graph, props.implementations]);
 
   return (
-    <div>
+    <div className="editor-container">
       <ControllerProvider graph={graph}>
         {props.implementations.map((implementation, index) => {
           return (
@@ -26,6 +27,7 @@ const Editor: React.SFC<IEditorProps> = (props) => {
           );
         })}
         <Nodes nodes$={graph.getNodes$()} />
+        <Edges edges$={graph.getEdges$()} />
       </ControllerProvider>
     </div>
   );

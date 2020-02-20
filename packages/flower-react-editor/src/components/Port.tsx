@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, FC, useCallback } from "react";
 import styled, { css } from "styled-components";
 import { IPortDescriptor, PortType } from "@plexius/flower-interfaces";
 import { useController, Ctl } from "../controller/ControllerContext";
 import ConnectionsController from "../controller/ConnectionsController";
+import { usePortStatus } from "../hooks/PortHooks";
 
-export interface PortProps extends IPortDescriptor {
-  name: string;
-  label: string;
-  type: PortType;
+export interface PortProps {
+  descriptor: IPortDescriptor,
+  label: string
 }
 
-const Container = styled.div<{ active: boolean, type: PortType }>`
+const Container = styled.div<{ type: PortType }>`
   position: relative;
   height: 30px;
   display: grid;
@@ -25,7 +25,7 @@ const Container = styled.div<{ active: boolean, type: PortType }>`
 const Label = styled.div`
 `;
 
-const PortStatus = styled.div<{ active: boolean }>`
+const PortStatus = styled.div<{ isSelected: boolean, isActive: boolean }>`
   width: 14px;
   height: 14px;
   box-shadow: 0 1px 7px rgba(0,0,0,.15);
@@ -33,30 +33,37 @@ const PortStatus = styled.div<{ active: boolean }>`
   border-radius: 50%;
   background-color: #fff;
   z-index: 2000;
-  ${props => props.active && css`
+  ${props => (props.isSelected || props.isActive) && css`
     background-color: #808080;
   `};
 `;
 
-const Port: React.SFC<PortProps> = (props) => {
-  const [active, setActive] = useState<boolean>(false);
+const Port: FC<PortProps> = (props) => {
   const connectionsController: ConnectionsController = useController(Ctl.Connections) as ConnectionsController;
+  const portStatus = usePortStatus(props.descriptor);
+  const portRef = useRef<HTMLDivElement>(null);
 
-  const activate = (descriptor: IPortDescriptor, type: PortType): void => {
-    connectionsController.activate(descriptor, type) ? setActive(true) : setActive(false);
-  }
-  const deactivate = (descriptor: IPortDescriptor, type: PortType): void => {
-    connectionsController.deactivate(descriptor, type) ? setActive(false) : setActive(true);
-  };
+  const select = useCallback((): void => {
+    portStatus && connectionsController.addToSelection(portStatus.descriptor);
+  }, [connectionsController, portStatus]);
 
-  const portDescriptor: IPortDescriptor = {
-    nodeId: props.nodeId,
-    name: props.name
-  };
+  const unselect = useCallback((): void => {
+    portStatus && connectionsController.removeFromSelection(portStatus.descriptor);
+  }, [connectionsController, portStatus]);
+
+  const setPortRef = useCallback((): void => {
+    portStatus && connectionsController.setPortReference(portStatus.descriptor, portRef.current);
+  }, [connectionsController, portStatus, portRef]);
+
+  useEffect(() => {
+    if (portStatus && portRef && portStatus.ref !== portRef.current) {
+      setPortRef();
+    }
+  }, [portStatus, portRef]);
 
   return (
-    <Container active={active} type={props.type}>
-      <PortStatus active={active} onClick={() => active ? deactivate(portDescriptor, props.type) : activate(portDescriptor, props.type)}></PortStatus>
+    <Container type={props.descriptor.type}>
+      <PortStatus ref={portRef} isSelected={portStatus?.isSelected} isActive={portStatus?.isActive} onClick={() => portStatus?.isSelected ? unselect() : select()}></PortStatus>
       <Label>{props.label}</Label>
     </Container>
   );

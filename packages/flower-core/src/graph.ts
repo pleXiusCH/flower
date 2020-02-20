@@ -2,6 +2,7 @@ import { INodeImpl, IPortDescriptor } from "@plexius/flower-interfaces";
 import { BehaviorSubject, Observable, OperatorFunction } from "rxjs";
 import Edge from "./edge";
 import Node from "./node";
+import { filter, map, distinct, mapTo } from "rxjs/operators";
 
 export default class Graph {
   private nodes$: BehaviorSubject<Map<string, Node>> = new BehaviorSubject(
@@ -44,5 +45,24 @@ export default class Graph {
 
   public getEdges$() {
     return this.edges$.asObservable();
+  }
+
+  public getConnectedEdges$(nodeUuid: string) {
+    const targetNode = this.getNode(nodeUuid);
+    return this.getEdges$().pipe(
+      map(edges => [...edges.values()].filter(edge => this.getConnectedNodes(edge).has(targetNode))), 
+      distinct()
+    );
+  }
+
+  private getConnectedNodes(edge: Edge) {
+    edge.destinationPortDescriptor.nodeId
+    const connectedNodes: Set<Node> = new Set();
+    for(const [nodeUuid, node] of this.nodes$.getValue()) {
+      if (nodeUuid === edge.destinationPortDescriptor.nodeId || nodeUuid === edge.sourcePortDescriptor.nodeId) {
+        connectedNodes.add(node);
+      }
+    }
+    return connectedNodes;
   }
 }

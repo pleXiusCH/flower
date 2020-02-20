@@ -19,6 +19,7 @@ export interface INodeImpl<T = any> {
 export interface IPortDescriptor {
   nodeId: string;
   name: string;
+  type: PortType;
 }
 
 export interface IActivationProps<T = any> {

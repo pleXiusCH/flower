@@ -9,9 +9,7 @@ export interface NodeProps {
 }
 
 const Nodes: React.SFC<NodeProps> = (props: NodeProps) => {
-
   const nodes = useObservable<Map<string, FlowerNode>>(props.nodes$, new Map());
-
   return (
     <>
       {[...nodes].map(([uuid, node]) => <Node uuid={uuid} node={node} key={uuid} />)}

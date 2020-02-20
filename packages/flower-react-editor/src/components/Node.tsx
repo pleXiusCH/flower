@@ -1,10 +1,11 @@
 import { Node as FlowerNode } from '@plexius/flower-core';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Draggable from 'react-draggable';
+import Draggable, { DraggableData, DraggableEventHandler } from 'react-draggable';
 import styled from "styled-components";
-import { node } from 'prop-types';
-import Port from './Port';
-import { IPortSpec, PortType } from '@plexius/flower-interfaces';
+import { Ports } from './Ports';
+import { PortType } from '@plexius/flower-interfaces';
+import { useController, Ctl } from '../controller/ControllerContext';
+import ConnectionsController from '../controller/ConnectionsController';
 
 export interface NodeProps {
   node: FlowerNode,
@@ -57,18 +58,9 @@ const getInitialState = (spec: any) => {
   return state;
 };
 
-const renderPorts = (ports: IPortSpec = {}, nodeId: string, type: PortType) => {
-  return (
-    <div>
-      {Object.getOwnPropertyNames(ports).map((key) => (
-        <Port {...ports[key]} nodeId={nodeId} name={key} key={key} type={type} />
-      ))}
-    </div>
-  );
-};
-
 const Node: React.FC<NodeProps> = (props) => {
   const sideEffectsContainer = useRef<HTMLDivElement>(null);
+  const connectionsController = useController(Ctl.Connections) as ConnectionsController;
 
   useEffect(() => {
     if (sideEffectsContainer.current) {
@@ -78,21 +70,17 @@ const Node: React.FC<NodeProps> = (props) => {
     }
   }, [sideEffectsContainer, props.node]);
 
-  const InputPorts = useCallback(() => {
-    return renderPorts(props.node.nodeImpl.inputs, props.uuid, PortType.Input);
-  }, [props.node.nodeImpl.inputs, props.uuid]);
-
-  const OutputPorts = useCallback(() => {
-    return renderPorts(props.node.nodeImpl.outputs, props.uuid, PortType.Output);
-  }, [props.node.nodeImpl.outputs, props.uuid]);
+  const handleDrag: DraggableEventHandler = (event) => {
+    connectionsController.redrawConnections(props.uuid);
+  };
 
   return (
-    <Draggable>
+    <Draggable onDrag={handleDrag}>
       <NodeElement>
         <Head>{props.node.type}</Head>
         <PortsContainer>
-          <InputPorts />
-          <OutputPorts />
+          <Ports nodeId={props.uuid} type={PortType.Input} ports={props.node.nodeImpl.inputs || {}} />
+          <Ports nodeId={props.uuid} type={PortType.Output} ports={props.node.nodeImpl.outputs || {}} />
         </PortsContainer>
         <div ref={sideEffectsContainer}></div>
       </NodeElement>
