@@ -70,7 +70,7 @@ const Node: React.FC<NodeProps> = (props) => {
     }
   }, [sideEffectsContainer, props.node]);
 
-  const handleDrag: DraggableEventHandler = (event) => {
+  const handleDrag: DraggableEventHandler = () => {
     connectionsController.redrawConnections(props.uuid);
   };
 
