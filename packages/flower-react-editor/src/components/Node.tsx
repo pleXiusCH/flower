@@ -1,7 +1,7 @@
 import { Node as FlowerNode } from '@plexius/flower-core';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Draggable, { DraggableData, DraggableEventHandler } from 'react-draggable';
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Ports } from './Ports';
 import { PortType } from '@plexius/flower-interfaces';
 import { useController, Ctl } from '../controller/ControllerContext';
@@ -18,20 +18,25 @@ const NodeElement = styled.div`
   top: 50%;
   left: 50%;
   display: block;
-  background-color: #fff;
-  border-radius: 8px;
+  color: #fff;
+  background-color: #1a202b;
+  border-radius: 12px;
   box-shadow: 0 1px 7px rgba(0,0,0,.15);
-  border: 1px solid rgba(0,0,0,.1);
   z-index: 5000;
+  min-width: 200px;
+  padding-bottom: 8px;
 `;
 
 const Head = styled.div`
-  padding: 5px 1em;
-  background-color: #808080;
-  color: #fff;
+  background-color: #151a24;
+  padding: 1.25em 2em;
   text-align: center;
-  font-weight: bold;
-  border-radius: 8px 8px 0 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+  border-radius: 12px 12px 0 0;
+  color: #adadad;
 `;
 
 const PortsContainer = styled.div`
@@ -40,13 +45,25 @@ const PortsContainer = styled.div`
   grid-template-rows: 1fr;
   grid-gap: 1em;
   margin: 0;
-
   & > div:nth-child(1) {
     transform: translateX(-8px);
   }
-
   & > div:nth-child(2) {
     transform: translateX(8px);
+  }
+`;
+
+const SideEffectsContainer = styled.div<{show:boolean}>`
+  ${p => !p.show && css`display:none;` }
+  margin: 1em;
+  input, textarea {
+    background-color: #151a24;
+    color: #fff;
+    width: 100%;
+    padding: 0.5em;
+    box-sizing: border-box;
+    border: none;
+    font-size: 16px;
   }
 `;
 
@@ -82,7 +99,7 @@ const Node: React.FC<NodeProps> = (props) => {
           <Ports nodeId={props.uuid} type={PortType.Input} ports={props.node.nodeImpl.inputs || {}} />
           <Ports nodeId={props.uuid} type={PortType.Output} ports={props.node.nodeImpl.outputs || {}} />
         </PortsContainer>
-        <div ref={sideEffectsContainer}></div>
+        <SideEffectsContainer ref={sideEffectsContainer} show={!!props.node.nodeImpl.sideEffectsFunction} />
       </NodeElement>
     </Draggable>
   );

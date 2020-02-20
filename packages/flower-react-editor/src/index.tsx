@@ -10,9 +10,29 @@ export interface IEditorProps {
   implementations: INodeImpl[]
 };
 
-const Contaienr = styled.div`
+type ContainerStyleProps = {
+  bgColor: string,
+  dotColor: string,
+  dotSize: number,
+  dotSpace: number
+};
+
+const containerStyleProps: ContainerStyleProps = {
+  bgColor: '#202b3c',
+  dotColor: 'rgba(29, 35, 48, 0.85)',
+  dotSize: 2,
+  dotSpace: 22
+};
+
+const Container = styled.div<ContainerStyleProps>`
+  @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
+  font-family: 'Ubuntu', sans-serif;
   height: 100vh;
-  background-color: #282828;
+  background:
+		linear-gradient(90deg, ${p => p.bgColor} ${p => p.dotSpace - p.dotSize}px, transparent 1%) center,
+		linear-gradient(${p => p.bgColor} ${p => p.dotSpace - p.dotSize}px, transparent 1%) center,
+		${p => p.dotColor};
+  background-size: ${p => p.dotSpace}px ${p => p.dotSpace}px;
 `;
 
 const GlobalStyle = createGlobalStyle`
@@ -37,7 +57,7 @@ const Editor: React.SFC<IEditorProps> = (props) => {
   }, [graph, props.implementations]);
 
   return (
-    <Contaienr>
+    <Container {...containerStyleProps}>
       <GlobalStyle />
       <ControllerProvider graph={graph}>
         {props.implementations.map((implementation, index) => {
@@ -48,7 +68,7 @@ const Editor: React.SFC<IEditorProps> = (props) => {
         <Nodes nodes$={graph.getNodes$()} />
         <Edges edges$={graph.getEdges$()} />
       </ControllerProvider>
-    </Contaienr>
+    </Container>
   );
 };
 

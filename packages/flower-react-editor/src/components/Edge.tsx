@@ -49,7 +49,7 @@ const Edge: FC<IEdgeProps> = (props) => {
 
   return (
     <>
-      <path stroke="#808080" fill="transparent" strokeWidth="3" d={pathString} />
+      <path stroke="#151a24" fill="transparent" strokeWidth="4" d={pathString} />
     </>
   )
 };

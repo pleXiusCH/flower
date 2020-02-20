@@ -59,9 +59,21 @@ export default class ConnectionsController implements ControllerInt<ConnectionsC
     for(const inputPort of selections.input) {
       for (const outputPort of selections.output) {
         currentGraph.createEdge(outputPort, inputPort);
-        this.removeFromSelection(inputPort);
-        this.removeFromSelection(outputPort);
+        this.addToActive(inputPort);
+        this.addToActive(outputPort);
       }
+    }
+  }
+
+  private addToActive(port: IPortDescriptor) {
+    if (this.portsStatus.has(port)) {
+      this.portsStatus.get(port).next({...this.portsStatus.get(port).getValue(), isSelected: false, isActive: true});
+    }
+  }
+
+  private removeFromActive(port: IPortDescriptor) {
+    if (this.portsStatus.has(port)) {
+      this.portsStatus.get(port).next({...this.portsStatus.get(port).getValue(), isActive: false});
     }
   }
 

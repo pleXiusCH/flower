@@ -29,12 +29,15 @@ const PortStatus = styled.div<{ isSelected: boolean, isActive: boolean }>`
   width: 14px;
   height: 14px;
   box-shadow: 0 1px 7px rgba(0,0,0,.15);
-  border: 1px solid rgba(0,0,0,.1);
+  border: 1px solid #505b75;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #151a24;
   z-index: 2000;
-  ${props => (props.isSelected || props.isActive) && css`
-    background-color: #808080;
+  ${props => props.isActive && css`
+    border-color: #21ff00;
+  `};
+  ${props => props.isSelected && css`
+    border-color: #00fffa;
   `};
 `;
 
