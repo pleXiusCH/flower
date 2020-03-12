@@ -1,6 +1,7 @@
 dist
 tmp
 node_modules
+coverage
 *debug.log
 *error.log
 *.tsbuildinfo

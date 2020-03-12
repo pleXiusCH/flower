@@ -10,6 +10,7 @@
     "serve": "webpack-dev-server --config webpack.dev.js --progress --colors --hot",
     "compile": "lerna run compile",
     "test": "jest",
+    "test:cover": "jest --coverage",
     "lint": "lerna run lint",
     "new-version": "lerna version --conventional-commits --yes",
     "diff": "lerna diff"

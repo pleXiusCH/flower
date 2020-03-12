@@ -16,6 +16,7 @@ export default class Edge<T = any> {
   private dataSource$: Observable<T>;
   private data$: Observable<T>;
   private events$: Subject<EdgeEvent> = new Subject();
+  private modifier: OperatorFunction<T, T> = null;
 
   constructor(graph: Graph, from: IPortDescriptor, to: IPortDescriptor) {
     this.uuid = uuidv4();
@@ -29,11 +30,16 @@ export default class Edge<T = any> {
   public useModifier(modifier: OperatorFunction<T, T>) {
     const { events$ } = this;
     events$.next(EdgeEvent.ApplyModifier);
+    this.modifier = modifier;
     this.data$ = this.dataSource$.pipe(
-      modifier,
+      this.modifier,
       takeUntil(events$.pipe(filter((e) => e === EdgeEvent.ApplyModifier))),
     );
     this.bindDataObservable(this.destinationPortDescriptor);
+  }
+
+  public getModifier() {
+    return this.modifier;
   }
 
   private bindSourceObservable(from: IPortDescriptor) {

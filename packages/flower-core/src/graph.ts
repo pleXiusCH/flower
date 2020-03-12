@@ -2,7 +2,7 @@ import { INodeImpl, IPortDescriptor } from "@plexius/flower-interfaces";
 import { BehaviorSubject, Observable, OperatorFunction } from "rxjs";
 import Edge from "./edge";
 import Node from "./node";
-import { filter, map, distinct, mapTo } from "rxjs/operators";
+import { map, distinct } from "rxjs/operators";
 
 export default class Graph {
   private nodes$: BehaviorSubject<Map<string, Node>> = new BehaviorSubject(
@@ -31,12 +31,12 @@ export default class Graph {
     return edge;
   }
 
-  public getNodeProperty$(port: IPortDescriptor): Observable<any> {
-    return new Observable();
-  }
-
   public getNode(nodeId: string): Node {
     return this.nodes$.getValue().get(nodeId);
+  }
+
+  public getEdge(edgeId: string): Edge {
+    return this.edges$.getValue().get(edgeId);
   }
 
   public getNodes$() {
