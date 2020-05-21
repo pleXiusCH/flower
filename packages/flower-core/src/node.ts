@@ -14,7 +14,6 @@ import {
   shareReplay,
   startWith,
   takeUntil,
-  tap,
 } from "rxjs/operators";
 import uuidv4 from "uuid/v4";
 import {
@@ -38,6 +37,8 @@ export default class Node<T = any> {
   private inputs$: Observable<Map<string, any>> = null;
   private state$: BehaviorSubject<T> = null;
   private outputs: NodeOutputs = new Map();
+  private activationFunction: ActivationFn<T> = () => new Map();
+  private sideEffectsFunction: SideEffectsFn<T> = () => {};
   readonly type: string;
 
   constructor(readonly nodeImpl: INodeImpl<T>) {
@@ -82,16 +83,14 @@ export default class Node<T = any> {
     return this.state$.asObservable();
   }
 
-  public async getState(): Promise<T> {
-    return this.state$.toPromise();
+  public getState$() {
+    return this.state$.asObservable();
   }
 
   public patchState(newState: any): Node<T> {
     this.setState({ ...this.state$.getValue(), ...newState });
     return this;
   }
-  private activationFunction: ActivationFn<T> = () => new Map();
-  private sideEffectsFunction: SideEffectsFn<T> = () => {};
 
   private setActivationFunction(activationFunction: ActivationFn) {
     this.activationFunction = activationFunction.bind(this);
@@ -119,6 +118,7 @@ export default class Node<T = any> {
           this.sideEffectsFunction({
             ...props,
             patchState: this.patchState.bind(this),
+            setState: this.setState.bind(this)
           });
           return activationFunction(props.inputs, props.state);
         }),
@@ -137,7 +137,7 @@ export default class Node<T = any> {
     }
   }
 
-  private bindConnectToInputs() {
+  private binqdConnectToInputs() {
     this.inputs$ = this.connectObservable$.asObservable().pipe(
       map((connection) => {
         return connection.observable.pipe(

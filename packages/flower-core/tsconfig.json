@@ -4,6 +4,9 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
+  "references": [
+    { "path":  "../flower-interfaces" }
+  ],
   "exclude": [
     "node_modules",
     "dist"

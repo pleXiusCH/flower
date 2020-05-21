@@ -22,12 +22,12 @@
       "es6",
       "dom"
     ],
-    /*"paths": {
+    /* "paths": {
       "@plexius/flower-core": ["packages/flower-core/src/index"],
       "@plexius/flower-interfaces": ["packages/flower-interfaces/src/index"],
       "@plexius/flower-nodes": ["packages/flower-nodes/src/index"],
       "@plexius/flower-react-editor": ["packages/flower-react-editor/src/index"],
-    }*/
+    } */
   },
   "exclude": [
     "node_modules",
