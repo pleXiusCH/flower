@@ -137,7 +137,7 @@ export default class Node<T = any> {
     }
   }
 
-  private binqdConnectToInputs() {
+  private bindConnectToInputs() {
     this.inputs$ = this.connectObservable$.asObservable().pipe(
       map((connection) => {
         return connection.observable.pipe(
