@@ -23,10 +23,14 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@blueprintjs/core": "^3.28.0",
+    "@blueprintjs/icons": "^3.18.0",
     "@plexius/flower-core": "^0.0.1",
     "@plexius/flower-interfaces": "^1.0.0",
     "react-draggable": "^4.1.0",
-    "react-use": "^13.10.1"
+    "react-mosaic-component": "^4.1.1",
+    "react-use": "^13.10.1",
+    "recoil": "^0.0.7"
   },
   "peerDependencies": {
     "react": "^16.12.0",

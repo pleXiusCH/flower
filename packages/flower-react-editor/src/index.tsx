@@ -1,10 +1,8 @@
 import { INodeImpl } from "@plexius/flower-interfaces";
-import Graph from "@plexius/flower-core";
-import React, { useState, useCallback } from "react";
-import Nodes from './components/Nodes';
-import { ControllerProvider } from './controller/ControllerContext';
-import Edges from "./components/Edges";
+import React from "react";
+import { MosaicEditor } from "./components/MosaicEditor";
 import styled, { createGlobalStyle } from "styled-components";
+import { RecoilRoot } from 'recoil';
 
 export interface IEditorProps {
   implementations: INodeImpl[]
@@ -41,7 +39,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     height: 100%;
   }
-
   #app {
     height: 100%;
   }
@@ -49,26 +46,13 @@ const GlobalStyle = createGlobalStyle`
 
 const Editor: React.SFC<IEditorProps> = (props) => {
 
-  const [graph, setGraph] = useState(new Graph());
-
-  const addNode = useCallback((nodeType: string) => {
-    const impl: INodeImpl = props.implementations.find((impl) => impl.type === nodeType);
-    graph.createNode(impl);
-  }, [graph, props.implementations]);
-
   return (
-    <Container {...containerStyleProps}>
-      <GlobalStyle />
-      <ControllerProvider graph={graph}>
-        {props.implementations.map((implementation, index) => {
-          return (
-          <button key={index} onClick={() => addNode(implementation.type)}>Add {implementation.type}</button>
-          );
-        })}
-        <Nodes nodes$={graph.getNodes$()} />
-        <Edges edges$={graph.getEdges$()} />
-      </ControllerProvider>
-    </Container>
+    <RecoilRoot>
+      <Container {...containerStyleProps}>
+        <GlobalStyle />
+        <MosaicEditor implementations={props.implementations} />
+      </Container>
+    </RecoilRoot>
   );
 };
 

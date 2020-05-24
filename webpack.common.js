@@ -9,6 +9,14 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {    
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        loader: "file-loader"
+      }
     ],
   },
   resolve: {
