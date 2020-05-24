@@ -1,7 +1,7 @@
 import { IPortDescriptor } from "@plexius/flower-interfaces";
 import { Observable, OperatorFunction, Subject } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
-import uuidv4 from "uuid/v4";
+import { v4 as uuidv4 } from 'uuid';
 import Graph from "./graph";
 export enum EdgeEvent {
   ApplyModifier,
