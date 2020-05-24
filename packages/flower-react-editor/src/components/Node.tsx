@@ -14,7 +14,7 @@ export interface NodeProps {
 }
 
 const NodeElement = styled.div`
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   display: block;
