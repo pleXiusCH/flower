@@ -18,12 +18,13 @@ const containerStyleProps: ContainerStyleProps = {
 };
 
 const Wrapper = styled.div<ContainerStyleProps>`
-  display: flex;
+  /*display: flex;*/
   width: 100%;
   height: 100%;
-  align-items: center;
+  */align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: hidden;*/
+  position: relative;
 
   /*
   @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
@@ -37,10 +38,10 @@ const Wrapper = styled.div<ContainerStyleProps>`
   */
 `;
 const Plane = styled.div`
-  position: relative;
-  overflow: visible;
-  width: 0;
-  height: 0;
+  /*position: relative;
+  overflow: visible;*/
+  width: 100%;
+  height: 100%;
 `;
 
 export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
@@ -61,11 +62,10 @@ export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
   const onPointerDown = () => setIsPointerDown(true);
   const onPointerUp = () => setIsPointerDown(false);
   const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
     e.stopPropagation();
 
     if (e.ctrlKey) {
-      setZoom(zoom - (e.deltaY * 0.01));
+      setZoom(Math.max(zoom + (e.deltaY * 0.01), 0.01));
     } else {
       setXTranslation(xTranslation - e.deltaX);
       setYTranslation(yTranslation - e.deltaY);

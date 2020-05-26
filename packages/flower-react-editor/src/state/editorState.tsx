@@ -1,10 +1,16 @@
 import { atom } from "recoil";
-import { memo } from "react";
+import { Subject } from "rxjs";
+import { map } from "rxjs/operators";
 
 export enum EditorStateKeys {
   MosaicState = 'EDITOR_MOSAIC_STATE',
   MosaicViews = 'EDITOR_MOSAIC_VIEWS',
-  Implementations = 'EDITOR_IMPLEMENTATIONS'
+  Implementations = 'EDITOR_IMPLEMENTATIONS',
+  Events = 'EDITOR_EVENTS_OBSERVABLE'
+};
+
+export enum EditorEvents {
+  RearrangeWindows = 'REARRANGE_WINDOWS',
 };
 
 export const mosaicState = atom({
@@ -28,4 +34,9 @@ export const mosaicViews = (id: number) => atom({
 export const implementations = atom({
   key: EditorStateKeys.Implementations,
   default: []
+});
+
+export const editorEvents$ = atom({
+  key: EditorStateKeys.Events,
+  default: new Subject<EditorEvents>().pipe(map((event: EditorEvents) => ({event, time: Date.now()}))),
 });

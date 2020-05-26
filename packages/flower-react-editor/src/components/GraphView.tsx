@@ -1,5 +1,4 @@
-import React, { useCallback, useState } from 'react';
-import { ControllerProvider } from '../controller/ControllerContext';
+import React, { useCallback, useState, Fragment } from 'react';
 import Nodes from './Nodes';
 import Edges from './Edges';
 import Graph from '@plexius/flower-core';
@@ -7,6 +6,7 @@ import { INodeImpl } from '@plexius/flower-interfaces';
 import { useRecoilValue } from 'recoil';
 import { implementations } from './../state/editorState'; 
 import InfinitePlane from './InfinitePlane';
+import SelectionHandler from './SelectionHandler';
 
 const GraphView = (props: { graph: Graph; implementations: INodeImpl[]}) => {
 
@@ -19,17 +19,18 @@ const GraphView = (props: { graph: Graph; implementations: INodeImpl[]}) => {
   }, [graph, implementationsState]);
   
   return (
-    <ControllerProvider graph={graph}>
+    <Fragment>
       {implementationsState.map((implementation, index) => {
         return (
         <button key={index} onClick={() => addNode(implementation.type)}>Add {implementation.type}</button>
         );
       })}
+      <SelectionHandler graph={graph} />
       <InfinitePlane>
         <Nodes nodes$={graph.getNodes$()} />
         <Edges edges$={graph.getEdges$()} />
       </InfinitePlane>
-    </ControllerProvider>
+    </Fragment>
   );
 };
 

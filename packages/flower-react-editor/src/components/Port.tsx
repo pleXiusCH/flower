@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect, FC, useCallback } from "react";
+import React, { useRef, useEffect, FC, useState } from "react";
 import styled, { css } from "styled-components";
 import { IPortDescriptor, PortType } from "@plexius/flower-interfaces";
-import { useController, Ctl } from "../controller/ControllerContext";
-import ConnectionsController from "../controller/ConnectionsController";
-import { usePortStatus } from "../hooks/PortHooks";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { portStateById, portCenterPoint, computeCenterPoint, portIsSelectedById } from "./../state/portsState";
+import { graphEvents$, GraphEvent, GraphEvents } from "../state/graphState";
+import { Subject } from "rxjs";
+import { filter } from "rxjs/operators";
 
 export interface PortProps {
   descriptor: IPortDescriptor,
@@ -42,31 +44,63 @@ const PortStatus = styled.div<{ isSelected: boolean, isActive: boolean }>`
 `;
 
 const Port: FC<PortProps> = (props) => {
-  const connectionsController: ConnectionsController = useController(Ctl.Connections) as ConnectionsController;
-  const portStatus = usePortStatus(props.descriptor);
+  
+  // todo: use uuid for port id
+  const [id, setId] = useState(`${props.descriptor.nodeId}-${props.descriptor.name}`);
   const portRef = useRef<HTMLDivElement>(null);
+  const [ portStatus, setPortStatus ] = useRecoilState(portStateById(id));
+  const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$);
+  const setPortCenterPoint = useSetRecoilState(portCenterPoint(id));
+  const [ portIsSelected, setPortIsSelected ] = useRecoilState(portIsSelectedById(id))
 
-  const select = useCallback((): void => {
-    portStatus && connectionsController.addToSelection(portStatus.descriptor);
-  }, [connectionsController, portStatus]);
+  const select = () => {
+    setPortIsSelected(true);
+  };
 
-  const unselect = useCallback((): void => {
-    portStatus && connectionsController.removeFromSelection(portStatus.descriptor);
-  }, [connectionsController, portStatus]);
+  const unselect = () => {
+    setPortIsSelected(false);
+  };
 
-  const setPortRef = useCallback((): void => {
-    portStatus && connectionsController.setPortReference(portStatus.descriptor, portRef.current);
-  }, [connectionsController, portStatus, portRef]);
+  const setCenterPoint = () => {
+    if (portRef?.current) {
+      setPortCenterPoint(computeCenterPoint(portRef.current.getBoundingClientRect()));
+    }
+  }
 
   useEffect(() => {
-    if (portStatus && portRef && portStatus.ref !== portRef.current) {
-      setPortRef();
+    const assocNodeDrag$ = _graphEvents$.pipe(
+      filter(e => (e.key == GraphEvents.NodeDrag && e.payload == props.descriptor.nodeId))
+    ).subscribe(() => setCenterPoint());
+    return () => {
+      assocNodeDrag$.unsubscribe();
     }
-  }, [portStatus, portRef]);
+  }, [_graphEvents$, props.descriptor.nodeId]);
+
+  useEffect(() => {
+    const newId = `${props.descriptor.nodeId}-${props.descriptor.name}`;
+    if(id !== newId) {
+      setId(newId);
+    }
+  }, [props.descriptor.nodeId, props.descriptor.name]);
+
+  useEffect(() => {
+    setPortStatus({...portStatus, descriptor: props.descriptor, id: id});
+  }, [props.descriptor, id]);
+
+  useEffect(() => {
+    if (portRef?.current) {
+      setCenterPoint();
+    }
+  }, [portRef]);
 
   return (
     <Container type={props.descriptor.type}>
-      <PortStatus ref={portRef} isSelected={portStatus?.isSelected} isActive={portStatus?.isActive} onClick={() => portStatus?.isSelected ? unselect() : select()}></PortStatus>
+      <PortStatus 
+        ref={portRef} 
+        isSelected={portIsSelected} 
+        isActive={false} 
+        onClick={() => portIsSelected ? unselect() : select()} 
+      />
       <Label>{props.label}</Label>
     </Container>
   );

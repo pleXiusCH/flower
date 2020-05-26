@@ -1,12 +1,13 @@
 import React, { useState, lazy, Suspense, useEffect } from 'react';
 import { Mosaic, MosaicWindow, MosaicBranch, CreateNode, MosaicZeroState, MosaicNode } from 'react-mosaic-component';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { mosaicViews, mosaicState, implementations } from '../state/editorState';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { mosaicViews, mosaicState, implementations, editorEvents$, EditorEvents } from '../state/editorState';
 
 import 'react-mosaic-component/react-mosaic-component.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 import { INodeImpl } from '@plexius/flower-interfaces';
+import { Subject } from 'rxjs';
 
 const ViewMap: { [viewId: string]: any } = {
   emptyView: () => (<div>empty</div>),
@@ -36,6 +37,7 @@ export const MosaicEditor = (props: { implementations: INodeImpl[] }) => {
   const [ mosaicStateValue, setMosaicState ] = useRecoilState(mosaicState);
   const [ mosaicViewCount, setMosaicViewCount ] = useState(2);
   const setImplementations = useSetRecoilState(implementations);
+  const _editorEvents$: Subject<EditorEvents> = useRecoilValue(editorEvents$);
 
   useEffect(() => {
     setImplementations(props.implementations);
@@ -47,7 +49,8 @@ export const MosaicEditor = (props: { implementations: INodeImpl[] }) => {
   };
 
   const onChange = (currentMosaicState: MosaicNode<number> | null) => {
-    setMosaicState(currentMosaicState)
+    setMosaicState(currentMosaicState);
+    _editorEvents$?.next(EditorEvents.RearrangeWindows);
   };
 
   return (

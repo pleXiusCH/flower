@@ -1,11 +1,12 @@
 import { Node as FlowerNode } from '@plexius/flower-core';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Draggable, { DraggableData, DraggableEventHandler } from 'react-draggable';
+import React, { useEffect, useRef } from 'react';
+import Draggable, { DraggableEventHandler } from 'react-draggable';
 import styled, { css } from "styled-components";
 import { Ports } from './Ports';
 import { PortType } from '@plexius/flower-interfaces';
-import { useController, Ctl } from '../controller/ControllerContext';
-import ConnectionsController from '../controller/ConnectionsController';
+import { useRecoilValue } from 'recoil';
+import { graphEvents$, GraphEvent, GraphEvents } from '../state/graphState';
+import { Subject } from 'rxjs';
 
 export interface NodeProps {
   node: FlowerNode,
@@ -77,7 +78,7 @@ const getInitialState = (spec: any) => {
 
 const Node: React.FC<NodeProps> = (props) => {
   const sideEffectsContainer = useRef<HTMLDivElement>(null);
-  const connectionsController = useController(Ctl.Connections) as ConnectionsController;
+  const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$);
 
   useEffect(() => {
     if (sideEffectsContainer.current) {
@@ -88,7 +89,7 @@ const Node: React.FC<NodeProps> = (props) => {
   }, [sideEffectsContainer, props.node]);
 
   const handleDrag: DraggableEventHandler = () => {
-    connectionsController.redrawConnections(props.uuid);
+    _graphEvents$?.next({ key: GraphEvents.NodeDrag, payload: props.uuid });
   };
 
   return (
