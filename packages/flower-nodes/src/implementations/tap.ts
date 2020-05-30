@@ -2,7 +2,7 @@ import { html, render } from "lit-html";
 import { ActivationFn, INodeImpl, SideEffectsFn } from "@plexius/flower-interfaces";
 
 const activationFunction: ActivationFn = (inputs, state) => {
-  return new Map();
+  return Promise.resolve(new Map());
 };
 
 const sideEffectsFunction: SideEffectsFn = (props) => {

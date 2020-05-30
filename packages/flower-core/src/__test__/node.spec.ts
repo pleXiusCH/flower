@@ -3,8 +3,8 @@ import Node from '../node';
 
 const testNodeImpl: INodeImpl = {
   type: 'test',
-  activationFunction: () => new Map()
-}
+  activationFunction: () => Promise.resolve(new Map())
+};
 
 test('should create a node instance', () => {
   const node = new Node(testNodeImpl);

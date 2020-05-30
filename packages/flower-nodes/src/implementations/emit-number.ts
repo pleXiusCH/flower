@@ -9,7 +9,7 @@ export interface EmitNumberState {
 
 const activationFunction: ActivationFn<EmitNumberState> = (inputs, state) => {
   // console.log("activation emit", state);
-  return new Map([["number", state.emitValue]]);
+  return Promise.resolve(new Map([["number", state.emitValue]]));
 };
 
 const sideEffectsFunction: SideEffectsFn<EmitNumberState> = (props) => {

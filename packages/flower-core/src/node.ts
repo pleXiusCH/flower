@@ -37,7 +37,7 @@ export default class Node<T = any> {
   private inputs$: Observable<Map<string, any>> = null;
   private state$: BehaviorSubject<T> = null;
   private outputs: NodeOutputs = new Map();
-  private activationFunction: ActivationFn<T> = () => new Map();
+  private activationFunction: ActivationFn<T> = () => Promise.resolve(new Map());
   private sideEffectsFunction: SideEffectsFn<T> = () => {};
   readonly type: string;
 
@@ -125,7 +125,16 @@ export default class Node<T = any> {
         takeUntil(lifecycle$.pipe(filter((e) => e === Lifecycle.Destroyed))),
       )
       .subscribe((outputs) => {
-        this.setOutputValues(outputs);
+        try {
+          outputs.then(response=>{
+            this.setOutputValues(response);
+          })
+          .catch(error=>{
+            console.error(error);
+          });
+        }catch (error) {
+          console.error(error);
+        }
       });
   }
 
