@@ -1,4 +1,5 @@
 const path = require('path');
+const colors = require('./packages/flower-react-editor/colors');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -9,14 +10,34 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        loader: "file-loader"
+      },
+
+      {
+        test: /\.less$/,
+        use: [ {
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader', // translates CSS into CommonJS
+        },{
+          loader: 'less-loader', // compiles Less to CSS
+          options: {
+            lessOptions: {
+              modifyVars: colors,
+              javascriptEnabled: true,
+            },
+          },
+        }
+        ],
+      },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
+        exclude: /node_modules\/antd/,
       },
-      {    
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        loader: "file-loader"
-      }
     ],
   },
   resolve: {
