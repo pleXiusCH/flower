@@ -1,7 +1,7 @@
 import { ActivationFn, INodeImpl } from "@plexius/flower-interfaces";
 const activationFunction: ActivationFn = (inputs) => {
   const sum = inputs.get("a") + inputs.get("b");
-  return new Map([["sum", sum]]);
+  return Promise.resolve(new Map([["sum", sum]]));
 };
 const specification: INodeImpl = {
   activationFunction,

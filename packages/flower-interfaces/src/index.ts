@@ -30,7 +30,7 @@ export interface IActivationProps<T = any> {
 export type ActivationFn<T = any> = (
   inputs: Map<string, any>,
   state: T,
-) => Map<string, any>;
+) => Promise< Map<string, any>>;
 
 export type SideEffectsFn<T = any> = (props?: {
   inputs: Map<string, any>;
