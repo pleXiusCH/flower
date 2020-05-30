@@ -21,7 +21,7 @@ const NodeElement = styled.div`
   display: block;
   color: #fff;
   background-color: #1a202b;
-  border-radius: 12px;
+  border-radius: 4px;
   box-shadow: 0 1px 7px rgba(0,0,0,.15);
   z-index: 5000;
   min-width: 200px;
@@ -30,7 +30,7 @@ const NodeElement = styled.div`
 
 const Head = styled.div`
   background-color: #151a24;
-  padding: 1.25em 2em;
+  padding: 0.5em 1.5em;
   text-align: center;
   text-transform: uppercase;
   font-weight: 600;

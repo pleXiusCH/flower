@@ -27,6 +27,7 @@
     "@blueprintjs/icons": "^3.18.0",
     "@plexius/flower-core": "^0.0.1",
     "@plexius/flower-interfaces": "^1.0.0",
+    "antd": "^4.2.5",
     "react-draggable": "^4.1.0",
     "react-mosaic-component": "^4.1.1",
     "react-use": "^13.10.1",

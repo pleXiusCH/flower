@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "serve": "webpack-dev-server --config webpack.dev.js --progress --colors --hot --port 3000",
+    "serve": "webpack-dev-server --config webpack.dev.js --progress --colors --hot",
     "compile": "lerna run compile",
     "test": "jest",
     "test:cover": "jest --coverage",
@@ -58,6 +58,7 @@
     "jest": "^26.0.1",
     "jest-styled-components": "^7.0.0-beta.1",
     "lerna": "^3.19.0",
+    "less-loader": "^6.1.0",
     "style-loader": "^1.2.1",
     "styled-components": "^5.1.0",
     "ts-jest": "^26.0.0",
