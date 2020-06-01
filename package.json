@@ -57,7 +57,7 @@
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.0.1",
     "jest-styled-components": "^7.0.0-beta.1",
-    "lerna": "^3.19.0",
+    "lerna": "^3.21.0",
     "less-loader": "^6.1.0",
     "style-loader": "^1.2.1",
     "styled-components": "^5.1.0",

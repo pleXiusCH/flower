@@ -1,86 +1,89 @@
-import React, { useState, useEffect, HTMLProps } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import styled from 'styled-components';
+import { fromEvent, Subscription } from 'rxjs';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePlaneOrignPosition } from '../state/infinitePlaneState';
+import { ICenterPoint, computeCenterPoint } from '../state/portsState';
+import { filter } from 'rxjs/operators';
+import { useObservable } from 'react-use';
+import { editorEvents$, EditorEvents } from '../state/editorState';
 
 export type InfinitePlaneProps = {};
 
-type ContainerStyleProps = {
-  bgColor: string,
-  dotColor: string,
-  dotSize: number,
-  dotSpace: number
-};
-
-const containerStyleProps: ContainerStyleProps = {
-  bgColor: '#202b3c',
-  dotColor: 'rgba(88, 88, 88, 0.85)',
-  dotSize: 2,
-  dotSpace: 22
-};
-
-const Wrapper = styled.div<ContainerStyleProps>`
-  /*display: flex;*/
+const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  */align-items: center;
-  justify-content: center;
-  overflow: hidden;*/
-  position: relative;
-
-  /*
-  @import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
-  font-family: 'Ubuntu', sans-serif;
-  height: 100vh;
-  background:
-		linear-gradient(90deg, ${p => p.bgColor} ${p => p.dotSpace - p.dotSize}px, transparent 1%) center,
-		linear-gradient(${p => p.bgColor} ${p => p.dotSpace - p.dotSize}px, transparent 1%) center,
-		${p => p.dotColor};
-  background-size: ${p => p.dotSpace}px ${p => p.dotSpace}px;
-  */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -10;
 `;
 const Plane = styled.div`
-  /*position: relative;
-  overflow: visible;*/
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  overflow: visible;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
 `;
 
 export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
 
+  const planeRef = useRef<HTMLDivElement>(null);
   const [ isHover, setIsHover ] = useState(false);
   const [ isPointerDown, setIsPointerDown ] = useState(false);
-  const [ xTranslation, setXTranslation ] = useState(0);
-  const [ yTranslation, setYTranslation ] = useState(0);
-  const [ zoom, setZoom ] = useState(1);
-  const [ matrix, setMatrix ] = useState('matrix(1,0,0,1,0,0)');
-
-  useEffect(() => {
-    setMatrix(`matrix(${zoom}, 0, 0, ${zoom}, ${xTranslation}, ${yTranslation})`);
-  }, [xTranslation, yTranslation, zoom]);
+  const setOriginPosition: (point: ICenterPoint) => void = useSetRecoilState(infinitePlaneOrignPosition);
+  const [ transformationMatrix, setTransformationMatrix ]: [ string, (transformation: TransformationDescriptor) => void] = useRecoilState(infintePlaneTransformationMatrix);
+  const editorEventReaarangeWindows = useObservable(useRecoilValue(editorEvents$)
+    .pipe(filter<{event: String, time: number}>(({event}) => (event === EditorEvents.RearrangeWindows))));
 
   const onPointerEnter = () => setIsHover(true);
   const onPointerLeave = () => setIsHover(false);
   const onPointerDown = () => setIsPointerDown(true);
   const onPointerUp = () => setIsPointerDown(false);
+
   const onWheel = (e: React.WheelEvent) => {
     e.stopPropagation();
-
     if (e.ctrlKey) {
-      setZoom(Math.max(zoom + (e.deltaY * 0.01), 0.01));
+      setTransformationMatrix({ zoom: (e.deltaY * 0.005), delta: true });
     } else {
-      setXTranslation(xTranslation - e.deltaX);
-      setYTranslation(yTranslation - e.deltaY);
+      setTransformationMatrix({ x: e.deltaX, y: e.deltaY, delta: true });
     }
   };
 
+  useLayoutEffect(() => {
+    const mouseMove$ = fromEvent<MouseEvent>(window, 'mousemove');
+    let mouseMoveSubscription: Subscription = null;
+    if (isPointerDown && planeRef?.current) {
+      mouseMoveSubscription = mouseMove$.subscribe(e => {
+        if (e.target === planeRef.current) {
+          setTransformationMatrix({x: e.movementX, y: e.movementY, delta: true});
+        }
+      });
+    }
+    return () => {
+      mouseMoveSubscription && mouseMoveSubscription.unsubscribe();
+    }
+  }, [isPointerDown, planeRef, transformationMatrix]);
+
+  useEffect(() => {
+    if (planeRef?.current) {
+      const centerPoint: ICenterPoint = computeCenterPoint(planeRef.current.getBoundingClientRect());
+      console.log("setOriginPosition", centerPoint, planeRef.current);      
+      setOriginPosition(centerPoint);
+    }
+  }, [planeRef, editorEventReaarangeWindows]);
+
   return (
-    <Wrapper /*style={{backgroundPosition: `${xTranslation}px ${yTranslation}px`}}*/ 
-        {...containerStyleProps} 
+    <Wrapper
         onPointerEnter={onPointerEnter} 
         onPointerLeave={onPointerLeave} 
         onPointerDown={onPointerDown} 
         onPointerUp={onPointerUp} 
-        onWheel={onWheel}>
-      <Plane style={{transform: matrix}}>{props.children}</Plane>
+        onWheel={onWheel}
+        ref={planeRef}
+      >
+      <Plane style={{transform: transformationMatrix}}>{props.children}</Plane>
     </Wrapper>
   );
 };

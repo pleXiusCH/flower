@@ -5,8 +5,10 @@ import { useObservable } from "react-use";
 import styled from "styled-components";
 import Edge from "./Edge";
 import { editorEvents$, EditorEvents } from "../state/editorState";
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { filter } from "rxjs/operators";
+import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePlaneOrignPosition } from '../state/infinitePlaneState';
+import { ICenterPoint } from "../state/portsState";
 
 export interface IEdgesProps {
   edges$: Observable<Map<string, FlowerEdge>>
@@ -22,31 +24,39 @@ const Svg = styled.svg`
   height: 100%;
 `;
 
+const Origin = styled.g``;
+
 const Edges: React.SFC<IEdgesProps> = (props) => {
   const edges = useObservable<Map<string, FlowerEdge>>(props.edges$, new Map());
+  const transformationMatrix: string = useRecoilValue(infintePlaneTransformationMatrix);
   const [relativePosition, setRelativePosition] = useState({x: 0, y: 0});
   const svgRef = useRef<SVGSVGElement>(null);
-  const editorEventReaarangeWindows = useObservable(useRecoilValue(editorEvents$)
-    .pipe(filter<{event: String, time: number}>(({event}) => (event === EditorEvents.RearrangeWindows))));
+  const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition);
 
   const calcRelativePosition = () => {
     if (svgRef && svgRef.current) {
-      const {x, y} = svgRef.current.getBoundingClientRect();
-      console.log("set new rel pos", x, y);
-      setRelativePosition({x, y});
+      const boundingBox = svgRef.current.getBoundingClientRect();
+      const position: ICenterPoint = {x: boundingBox.x, y: boundingBox.y};
+      if (infinitePlaneOrignPos) {
+        position.x = infinitePlaneOrignPos.x - position.x;
+        position.y = infinitePlaneOrignPos.y - position.y;
+      }
+      setRelativePosition(position);
     }
   };
 
   useEffect(() => {
     calcRelativePosition();
-  }, [svgRef, editorEventReaarangeWindows]);
+  }, [svgRef, infinitePlaneOrignPos]);
   
 
   return (
     <Svg ref={svgRef}>
-      <g style={{transform: `translate(${-relativePosition.x}px, ${-relativePosition.y}px)`}}>
-        {[...edges].map(([uuid, edge]) => <Edge uuid={uuid} edge={edge} key={uuid} />)}
-      </g>
+      <Origin style={{transform: `translate(${relativePosition.x}px, ${relativePosition.y}px)`}}>
+        <g style={{transform: transformationMatrix}}>
+          {[...edges].map(([uuid, edge]) => <Edge uuid={uuid} edge={edge} key={uuid} />)}
+        </g>
+      </Origin>
     </Svg>
   );
 };

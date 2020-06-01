@@ -2,13 +2,13 @@ import React, {Fragment, useCallback, useState} from 'react';
 import Nodes from './Nodes';
 import Edges from './Edges';
 import Graph from '@plexius/flower-core';
-import {INodeImpl} from '@plexius/flower-interfaces';
-import {useRecoilValue} from 'recoil';
-import {implementations} from './../state/editorState';
-import InfinitePlane from './InfinitePlane';
+import { INodeImpl } from '@plexius/flower-interfaces';
+import { useRecoilValue } from 'recoil';
+import { implementations } from './../state/editorState'; 
 import SelectionHandler from './SelectionHandler';
 import GraphPanel from "./GraphPanel";
 import {Header} from "./atoms/Header";
+import InfinitePlane from './InfinitePlane';
 
 
 const GraphView = () => {
@@ -28,10 +28,8 @@ const GraphView = () => {
         <Header>
           <GraphPanel addNode={addNode}/>
         </Header>
-        <InfinitePlane>
-          <Nodes nodes$={graph.getNodes$()}/>
-          <Edges edges$={graph.getEdges$()}/>
-        </InfinitePlane>
+        <Nodes nodes$={graph.getNodes$()}/>
+        <Edges edges$={graph.getEdges$()}/>
       </Fragment>
   );
 };

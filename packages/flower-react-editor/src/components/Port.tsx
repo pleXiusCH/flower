@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, FC, useState } from "react";
+import React, { useRef, useEffect, FC, useState, useCallback } from "react";
 import styled, { css } from "styled-components";
 import { IPortDescriptor, PortType } from "@plexius/flower-interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -6,6 +6,8 @@ import { portStateById, portCenterPoint, computeCenterPoint, portIsSelectedById 
 import { graphEvents$, GraphEvent, GraphEvents } from "../state/graphState";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
+import { infinitePlaneOrignPosition, infintePlaneTransformation, TransformationDescriptor } from "../state/infinitePlaneState";
+import { ICenterPoint } from "./Edge";
 
 export interface PortProps {
   descriptor: IPortDescriptor,
@@ -51,7 +53,9 @@ const Port: FC<PortProps> = (props) => {
   const [ portStatus, setPortStatus ] = useRecoilState(portStateById(id));
   const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$);
   const setPortCenterPoint = useSetRecoilState(portCenterPoint(id));
-  const [ portIsSelected, setPortIsSelected ] = useRecoilState(portIsSelectedById(id))
+  const [ portIsSelected, setPortIsSelected ] = useRecoilState(portIsSelectedById(id));
+  const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition);
+  const _infintePlaneTransformation: TransformationDescriptor = useRecoilValue(infintePlaneTransformation);
 
   const select = () => {
     setPortIsSelected(true);
@@ -61,11 +65,20 @@ const Port: FC<PortProps> = (props) => {
     setPortIsSelected(false);
   };
 
-  const setCenterPoint = () => {
+  const setCenterPoint = useCallback(() => {
     if (portRef?.current) {
-      setPortCenterPoint(computeCenterPoint(portRef.current.getBoundingClientRect()));
+      const computedCenterPoint = computeCenterPoint(portRef.current.getBoundingClientRect());
+      if (_infintePlaneTransformation && infinitePlaneOrignPos) {
+        const relOrigin: ICenterPoint = {
+          x: (infinitePlaneOrignPos.x + _infintePlaneTransformation.x),
+          y: (infinitePlaneOrignPos.y + _infintePlaneTransformation.y),
+        };
+        computedCenterPoint.x = (computedCenterPoint.x - relOrigin.x) / _infintePlaneTransformation.zoom;
+        computedCenterPoint.y = (computedCenterPoint.y - relOrigin.y) / _infintePlaneTransformation.zoom;
+      }
+      setPortCenterPoint(computedCenterPoint);
     }
-  }
+  }, [portRef, _infintePlaneTransformation, infinitePlaneOrignPos]);
 
   useEffect(() => {
     const assocNodeDrag$ = _graphEvents$.pipe(
@@ -74,7 +87,7 @@ const Port: FC<PortProps> = (props) => {
     return () => {
       assocNodeDrag$.unsubscribe();
     }
-  }, [_graphEvents$, props.descriptor.nodeId]);
+  }, [_graphEvents$, props.descriptor.nodeId, setCenterPoint]);
 
   useEffect(() => {
     const newId = `${props.descriptor.nodeId}-${props.descriptor.name}`;
