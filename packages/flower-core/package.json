@@ -24,6 +24,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/uuid": "^8.0.0",
+    "rxjs-spy": "^7.5.2",
+    "rxjs-spy-devtools-plugin": "^0.0.4",
     "typescript": "^3.7.2"
   },
   "dependencies": {

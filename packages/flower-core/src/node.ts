@@ -23,13 +23,15 @@ import {
   NodeOutputs,
   SideEffectsFn,
 } from "@plexius/flower-interfaces";
+import { tag } from "rxjs-spy/operators/tag";
+import ActivitiesListener$ from "./activitiesListener";
 
 export enum Lifecycle {
   Created,
   Destroyed,
 }
 
-export default class Node<T = any> {
+export default class Node<T = any> extends ActivitiesListener$ {
   public readonly uuid: string;
   private lifecycle$: Subject<Lifecycle> = new Subject();
   private connectObservable$: ConnectSubject = new Subject();
@@ -42,6 +44,7 @@ export default class Node<T = any> {
   readonly type: string;
 
   constructor(readonly nodeImpl: INodeImpl<T>) {
+    super();
     this.uuid = uuidv4();
     this.type = nodeImpl.type;
     nodeImpl.activationFunction &&
@@ -52,6 +55,10 @@ export default class Node<T = any> {
     this.bindConnectToInputs();
     this.createOutputs();
     this.subscribeActivationObserver();
+    this.addActivity(`events::node::${this.uuid}`, this.lifecycle$.asObservable());
+    this.lifecycle$.asObservable().pipe(tag("node-lifecycle"))
+      .subscribe(event => console.log("node-lifecycle-event", this.uuid, event));
+    this.lifecycle$.next(Lifecycle.Created);
   }
 
   public getOutputObservable(propertyName: string) {
@@ -90,6 +97,13 @@ export default class Node<T = any> {
   public patchState(newState: any): Node<T> {
     this.setState({ ...this.state$.getValue(), ...newState });
     return this;
+  }
+
+  public getOutputValues() {
+    return [...this.outputs].map(([key, valueSubject]) => ({
+      identifier: key,
+      value: valueSubject.value
+    }));
   }
 
   private setActivationFunction(activationFunction: ActivationFn) {

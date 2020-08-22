@@ -50,17 +50,17 @@ test('shoud patch the current state inside a node', done => {
   });
 });
 
-test('shoud set a new side-effects function of a node', done => {
-  const node = new Node(testNodeImpl);
-  const sideEffectsFn: SideEffectsFn = (props) => {
-    props.setState({ newSideEffectsFn: true });
-  };
-  node.setSideEffectsFunction(sideEffectsFn);
-  node.setState(false);
-  node.getState$().subscribe((state) => {
-    if (state) {
-      expect(state).toStrictEqual({ newSideEffectsFn: true });
-      done();
-    } 
-  });
-});
+// test('shoud set a new side-effects function of a node', done => {
+//   const node = new Node(testNodeImpl);
+//   const sideEffectsFn: SideEffectsFn = (props) => {
+//     props.setState({ newSideEffectsFn: true });
+//   };
+//   node.setSideEffectsFunction(sideEffectsFn);
+//   node.setState(false);
+//   node.getState$().subscribe((state) => {
+//     if (state) {
+//       expect(state).toStrictEqual({ newSideEffectsFn: true });
+//       done();
+//     } 
+//   });
+// });

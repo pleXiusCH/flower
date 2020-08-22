@@ -1,16 +1,34 @@
 import { INodeImpl, IPortDescriptor } from "@plexius/flower-interfaces";
-import { BehaviorSubject, Observable, OperatorFunction } from "rxjs";
+import { BehaviorSubject, OperatorFunction } from "rxjs";
+import { v4 as uuidv4 } from 'uuid';
 import Edge from "./edge";
 import Node from "./node";
 import { map, distinct } from "rxjs/operators";
+import ActivitiesListener$ from "./activitiesListener";
 
-export default class Graph {
+export default class Graph extends ActivitiesListener$ {
+  private uuid: string = uuidv4();
   private nodes$: BehaviorSubject<Map<string, Node>> = new BehaviorSubject(
     new Map(),
   );
   private edges$: BehaviorSubject<Map<string, Edge>> = new BehaviorSubject(
     new Map(),
   );
+
+  public getUuid() {
+    return this.uuid;
+  }
+
+  public async execute() {
+    return new Promise((resolve, reject) => {
+      this.nodes$.subscribe(nodes => {
+        resolve([...nodes].map(([uuid, node]) => ({
+            nodeUuid: uuid,
+            outputs: node.getOutputValues(),
+        })).filter(n => n.outputs.length >= 1));
+      }, err => reject(err)).unsubscribe();
+    });
+  }
 
   public createNode(nodeImpl: INodeImpl): Node {
     const node = new Node(nodeImpl);
@@ -27,6 +45,7 @@ export default class Graph {
     if (modifier) {
       edge.useModifier(modifier);
     }
+    this.composeActivites(`edge::${edge.uuid}`, edge.getActivities$());
     this.edges$.next(new Map([...this.edges$.getValue(), [edge.uuid, edge]]));
     return edge;
   }
