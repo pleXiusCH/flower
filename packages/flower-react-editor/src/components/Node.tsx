@@ -9,9 +9,10 @@ import { graphEvents$, GraphEvent, GraphEvents } from '../state/graphState';
 import { Subject } from 'rxjs';
 
 export interface NodeProps {
-  node: FlowerNode,
+  node: FlowerNode;
   uuid: string;
-  onDragEvent?: Function;
+  graphId: string;
+  onDragEvent?: () => void;
 }
 
 const NodeElement = styled.div`
@@ -54,7 +55,7 @@ const PortsContainer = styled.div`
   }
 `;
 
-const SideEffectsContainer = styled.div<{show:boolean}>`
+const SideEffectsContainer = styled.div<{show: boolean}>`
   ${p => !p.show && css`display:none;` }
   margin: 1em;
   input, textarea {
@@ -78,7 +79,7 @@ const getInitialState = (spec: any) => {
 
 const Node: React.FC<NodeProps> = (props) => {
   const sideEffectsContainer = useRef<HTMLDivElement>(null);
-  const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$);
+  const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$(props.graphId));
 
   useEffect(() => {
     if (sideEffectsContainer.current) {
@@ -97,8 +98,8 @@ const Node: React.FC<NodeProps> = (props) => {
       <NodeElement>
         <Head>{props.node.type}</Head>
         <PortsContainer>
-          <Ports nodeId={props.uuid} type={PortType.Input} ports={props.node.nodeImpl.inputs || {}} />
-          <Ports nodeId={props.uuid} type={PortType.Output} ports={props.node.nodeImpl.outputs || {}} />
+          <Ports nodeId={props.uuid} type={PortType.Input} ports={props.node.nodeImpl.inputs || {}} graphId={props.graphId} />
+          <Ports nodeId={props.uuid} type={PortType.Output} ports={props.node.nodeImpl.outputs || {}} graphId={props.graphId} />
         </PortsContainer>
         <SideEffectsContainer ref={sideEffectsContainer} show={!!props.node.nodeImpl.sideEffectsFunction} />
       </NodeElement>

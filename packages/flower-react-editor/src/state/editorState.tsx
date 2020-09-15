@@ -1,6 +1,6 @@
-import { atom } from "recoil";
+import { atom, atomFamily } from "recoil";
 import { Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { INodeImpl } from "@plexius/flower-interfaces";
 
 export enum EditorStateKeys {
   MosaicState = 'EDITOR_MOSAIC_STATE',
@@ -23,20 +23,20 @@ export const mosaicState = atom({
   }
 });
 
-export const mosaicViews = (id: number) => atom({
-  key: `${EditorStateKeys.MosaicViews}#${id}`,
-  default: {
+export const mosaicViewState = atomFamily<any, number>({
+  key: EditorStateKeys.MosaicViews,
+  default: (id: number) => ({
     title: `Window #${id}`,
     selectedView: 'emptyView'
-  }
+  })
 });
 
-export const implementations = atom({
+export const implementations = atom<INodeImpl[]>({
   key: EditorStateKeys.Implementations,
   default: []
 });
 
 export const editorEvents$ = atom({
   key: EditorStateKeys.Events,
-  default: new Subject<EditorEvents>().pipe(map((event: EditorEvents) => ({event, time: Date.now()}))),
+  default: new Subject<EditorEvents>(),
 });

@@ -3,9 +3,10 @@ import { IPortSpec, PortType, IPortDescriptor } from "@plexius/flower-interfaces
 import Port from "./Port";
 
 export interface PortsProps {
-  ports: IPortSpec,
-  nodeId: string,
-  type: PortType
+  ports: IPortSpec;
+  nodeId: string;
+  type: PortType;
+  graphId: string;
 }
 
 const createPortDescriptor = (name: string, type: PortType, nodeId: string): IPortDescriptor => {
@@ -19,10 +20,10 @@ export const Ports: FC<PortsProps> = (props) => {
   useEffect(() => {
     setPortDescriptors(new Set(Object.entries(props.ports).map(([key]) => createPortDescriptor(key, type, nodeId))));
   }, [ports, type, nodeId]);
-  
+
   return (
     <div>
-      {[...portDescriptors].map((descriptor) => <Port {...ports[descriptor.name]} key={descriptor.name} descriptor={descriptor} />)}
+      {[...portDescriptors].map((descriptor) => <Port {...ports[descriptor.name]} key={descriptor.name} descriptor={descriptor} graphId={props.graphId} />)}
     </div>
   );
 };

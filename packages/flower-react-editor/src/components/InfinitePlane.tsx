@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { fromEvent, Subscription } from 'rxjs';
 import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
-import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePlaneOrignPosition } from '../state/infinitePlaneState';
+import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePlaneOrignPosition, infintePlaneTransformation } from '../state/infinitePlaneState';
 import { ICenterPoint, computeCenterPoint } from '../state/portsState';
 import { filter } from 'rxjs/operators';
 import { useObservable } from 'react-use';
 import { editorEvents$, EditorEvents } from '../state/editorState';
 
-export type InfinitePlaneProps = {};
+export type InfinitePlaneProps = {
+  graphId: string;
+};
 
 const Wrapper = styled.div`
   width: 100%;
@@ -32,10 +34,11 @@ export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
   const planeRef = useRef<HTMLDivElement>(null);
   const [ isHover, setIsHover ] = useState(false);
   const [ isPointerDown, setIsPointerDown ] = useState(false);
-  const setOriginPosition: (point: ICenterPoint) => void = useSetRecoilState(infinitePlaneOrignPosition);
-  const [ transformationMatrix, setTransformationMatrix ]: [ string, (transformation: TransformationDescriptor) => void] = useRecoilState(infintePlaneTransformationMatrix);
+  const setOriginPosition: (point: ICenterPoint) => void = useSetRecoilState(infinitePlaneOrignPosition(props.graphId));
+  const transformationMatrix = useRecoilValue(infintePlaneTransformationMatrix(props.graphId));
+  const setTransformationMatrix = useSetRecoilState(infintePlaneTransformation(props.graphId));
   const editorEventReaarangeWindows = useObservable(useRecoilValue(editorEvents$)
-    .pipe(filter<{event: String, time: number}>(({event}) => (event === EditorEvents.RearrangeWindows))));
+    .pipe(filter<string>((event) => (event === EditorEvents.RearrangeWindows))));
 
   const onPointerEnter = () => setIsHover(true);
   const onPointerLeave = () => setIsHover(false);
@@ -62,24 +65,23 @@ export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
       });
     }
     return () => {
-      mouseMoveSubscription && mouseMoveSubscription.unsubscribe();
+      if (mouseMoveSubscription) mouseMoveSubscription.unsubscribe();
     }
   }, [isPointerDown, planeRef, transformationMatrix]);
 
   useEffect(() => {
     if (planeRef?.current) {
       const centerPoint: ICenterPoint = computeCenterPoint(planeRef.current.getBoundingClientRect());
-      console.log("setOriginPosition", centerPoint, planeRef.current);      
       setOriginPosition(centerPoint);
     }
   }, [planeRef, editorEventReaarangeWindows]);
 
   return (
     <Wrapper
-        onPointerEnter={onPointerEnter} 
-        onPointerLeave={onPointerLeave} 
-        onPointerDown={onPointerDown} 
-        onPointerUp={onPointerUp} 
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
         onWheel={onWheel}
         ref={planeRef}
       >

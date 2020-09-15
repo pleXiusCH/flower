@@ -6,18 +6,17 @@ import Node from "./Node";
 import InfinitePlane from "./InfinitePlane";
 
 export interface NodeProps {
-  nodes$: Observable<Map<string, FlowerNode>>
+  graphId: string;
+  nodes$: Observable<Map<string, FlowerNode>>;
 }
 
 const Nodes: React.SFC<NodeProps> = (props: NodeProps) => {
   const nodes = useObservable<Map<string, FlowerNode>>(props.nodes$, new Map());
   return (
-    <InfinitePlane>
-      {[...nodes].map(([uuid, node]) => <Node uuid={uuid} node={node} key={uuid} />)}
+    <InfinitePlane graphId={props.graphId}>
+      {[...nodes].map(([uuid, node]) => <Node uuid={uuid} node={node} key={uuid} graphId={props.graphId} />)}
     </InfinitePlane>
   );
-
-  
 };
 
 export default Nodes;

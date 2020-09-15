@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom, selector, atomFamily, selectorFamily } from "recoil";
 import { IPortDescriptor } from "@plexius/flower-interfaces";
 
 export enum PortsStateKeys {
@@ -19,45 +19,46 @@ export interface PortStateInt {
   connectionId?: string
 };
 
-export const portStateById = (id: string) => atom({
-  key: `${PortsStateKeys.PortState}#${id}`,
-  default: {
-    id: id,
+export const portStateById = atomFamily<PortStateInt, string>({
+  key: PortsStateKeys.PortState,
+  default: id => ({
+    id,
     descriptor: null,
-    ref: null,
-  } as PortStateInt
+  })
 });
 
-export const selectedPortIds = atom({
+export const selectedPortIds = atom<string[]>({
   key: PortsStateKeys.SelectedPortIds,
   default: [],
 });
 
-export const activePortIds = atom({
+export const activePortIds = atom<string[]>({
   key: PortsStateKeys.ActivePortIds,
   default: [],
 });
 
-export const portIsSelectedById = (portId: string) => selector({
-  key: `${PortsStateKeys.PortIsSelectedById}#${portId}`,
-  get: ({get}: {get: Function}) => get(selectedPortIds).includes(portId),
-  set: ({set, get}: {set: Function, get: Function}, isSelected: boolean) => {
-    const _selectedPortIds: string[] = get(selectedPortIds);
-    isSelected && !_selectedPortIds.includes(portId) && set(selectedPortIds, [..._selectedPortIds, portId]);
-    !isSelected && _selectedPortIds.includes(portId) && set(selectedPortIds, _selectedPortIds.filter(id => id !== portId));
+export const portIsSelectedById = selectorFamily<boolean, string>({
+  key: PortsStateKeys.PortIsSelectedById,
+  get: portId => ({get}) => get(selectedPortIds).includes(portId),
+  set: portId => ({set, get}, isSelected: boolean) => {
+    const _selectedPortIds = get(selectedPortIds);
+    if (isSelected && !_selectedPortIds.includes(portId)) {
+      set(selectedPortIds, [..._selectedPortIds, portId]);
+    } else if (!isSelected && _selectedPortIds.includes(portId)) {
+      set(selectedPortIds, _selectedPortIds.filter(id => id !== portId));
+    }
   },
 });
 
 export const selectedPorts = selector({
   key: PortsStateKeys.SelectedPorts,
-  get: ({get}: {get: Function}) => {
-    const selectedIds = get(selectedPortIds);
-    return selectedIds.map((id: string) => get(portStateById(id)));
+  get: ({get}) => {
+    return get(selectedPortIds).map((id: string) => get(portStateById(id)));
   },
 });
 
-export const portCenterPoint = (id: string) => atom({
-  key: `${PortsStateKeys.PortCenterPoint}#${id}`,
+export const portCenterPoint = atomFamily<ICenterPoint, string>({
+  key: PortsStateKeys.PortCenterPoint,
   default: null
 });
 
@@ -65,7 +66,7 @@ export const portsBoundingBox = (...ids: string[]) => {
   const combinedId = ids.sort().reduce((acc, id) => `${acc}_${id}`);
   return selector({
     key: `${PortsStateKeys.PortsBoundingBox}#${combinedId}`,
-    get: ({get}: {get: Function}) => {
+    get: ({get}) => {
       const centerPoints: ICenterPoint[] = ids.map(id => get(portCenterPoint(id)));
       return computeWrappingBoundingBox(centerPoints);
     },

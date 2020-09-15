@@ -1,6 +1,5 @@
-import { atom } from "recoil";
+import { atom, atomFamily } from "recoil";
 import { Subject } from "rxjs";
-import { map, tap } from "rxjs/operators";
 
 export enum GraphStateKeys {
   GraphState = 'GRAPH_STATE',
@@ -17,13 +16,13 @@ export type GraphEvent = {
   time?: number
 };
 
-export const graphState = (graphId: string) => atom({
-  key: `${GraphStateKeys.GraphState}#${graphId}`,
+export const graphState = atomFamily({
+  key: GraphStateKeys.GraphState,
   default: {
   }
 });
 
-export const graphEvents$ = atom({
+export const graphEvents$ = atomFamily({
   key: `${GraphStateKeys.Events}`,
-  default: new Subject<GraphEvent>()/*.pipe(map(event => ({...event, time: Date.now()})))*/,
+  default: new Subject<GraphEvent>()
 });

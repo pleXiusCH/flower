@@ -14,7 +14,7 @@ const Editor: React.SFC<IEditorProps> = (props) => {
       <RecoilRoot>
           <MosaicEditor implementations={props.implementations} />
       </RecoilRoot>
-    </React.StrictMode> 
+    </React.StrictMode>
   );
 };
 

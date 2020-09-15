@@ -11,7 +11,8 @@ import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePla
 import { ICenterPoint } from "../state/portsState";
 
 export interface IEdgesProps {
-  edges$: Observable<Map<string, FlowerEdge>>
+  graphId: string;
+  edges$: Observable<Map<string, FlowerEdge>>;
 };
 
 const Svg = styled.svg`
@@ -28,10 +29,10 @@ const Origin = styled.g``;
 
 const Edges: React.SFC<IEdgesProps> = (props) => {
   const edges = useObservable<Map<string, FlowerEdge>>(props.edges$, new Map());
-  const transformationMatrix: string = useRecoilValue(infintePlaneTransformationMatrix);
+  const transformationMatrix = useRecoilValue(infintePlaneTransformationMatrix(props.graphId));
   const [relativePosition, setRelativePosition] = useState({x: 0, y: 0});
   const svgRef = useRef<SVGSVGElement>(null);
-  const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition);
+  const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition(props.graphId));
 
   const calcRelativePosition = () => {
     if (svgRef && svgRef.current) {

@@ -10,8 +10,9 @@ import { infinitePlaneOrignPosition, infintePlaneTransformation, TransformationD
 import { ICenterPoint } from "./Edge";
 
 export interface PortProps {
-  descriptor: IPortDescriptor,
-  label: string
+  descriptor: IPortDescriptor;
+  label: string;
+  graphId: string;
 }
 
 const Container = styled.div<{ type: PortType }>`
@@ -46,16 +47,15 @@ const PortStatus = styled.div<{ isSelected: boolean, isActive: boolean }>`
 `;
 
 const Port: FC<PortProps> = (props) => {
-  
   // todo: use uuid for port id
   const [id, setId] = useState(`${props.descriptor.nodeId}-${props.descriptor.name}`);
   const portRef = useRef<HTMLDivElement>(null);
   const [ portStatus, setPortStatus ] = useRecoilState(portStateById(id));
-  const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$);
+  const _graphEvents$: Subject<GraphEvent> = useRecoilValue(graphEvents$(props.graphId));
   const setPortCenterPoint = useSetRecoilState(portCenterPoint(id));
   const [ portIsSelected, setPortIsSelected ] = useRecoilState(portIsSelectedById(id));
-  const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition);
-  const _infintePlaneTransformation: TransformationDescriptor = useRecoilValue(infintePlaneTransformation);
+  const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition(props.graphId));
+  const _infintePlaneTransformation: TransformationDescriptor = useRecoilValue(infintePlaneTransformation(props.graphId));
 
   const select = () => {
     setPortIsSelected(true);

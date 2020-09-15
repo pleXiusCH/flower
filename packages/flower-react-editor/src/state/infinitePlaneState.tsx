@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom, RecoilState, selectorFamily, atomFamily } from "recoil";
 import { ICenterPoint } from "./portsState";
 
 export enum StateKeys {
@@ -10,38 +10,6 @@ export enum StateKeys {
   TransformationState = "INFINITE_PLANE_TRANSFORMATION_STATE",
 };
 
-export const infinitePlaneXTranslation = atom({
-  key: StateKeys.XTranslation,
-  default: 0
-});
-
-export const infinitePlaneYTranslation = atom({
-  key: StateKeys.YTranslation,
-  default: 0
-});
-
-export const infinitePlaneZoom = atom({
-  key: StateKeys.Zoom,
-  default: 1
-});
-
-export const infinitePlaneOrignPosition: () => ICenterPoint = atom({
-  key: StateKeys.OriginPosition,
-  default: null,
-  persistence_UNSTABLE: {
-    type: 'log'
-  },
-});
-
-export const infintePlaneTransformation: () => TransformationDescriptor = selector({
-  key: StateKeys.TransformationState,
-  get: ({get}: {get: Function}) => ({
-    x: get(infinitePlaneXTranslation), 
-    y: get(infinitePlaneYTranslation),
-    zoom: get(infinitePlaneZoom)
-  }),
-});
-
 export type TransformationDescriptor = {
   x?: number,
   y?: number,
@@ -49,18 +17,53 @@ export type TransformationDescriptor = {
   delta?: boolean,
 };
 
-export const infintePlaneTransformationMatrix = selector({
-  key: StateKeys.TransformationMatrx,
-  get: ({get}: {get: Function}) => `matrix(${get(infinitePlaneZoom)}, 0, 0, ${get(infinitePlaneZoom)}, ${get(infinitePlaneXTranslation)}, ${get(infinitePlaneYTranslation)})`,
-  set: (accessor: {set: Function, get: Function}, transform: TransformationDescriptor) => {
-    transform.x && updateTransformationAtom(accessor, infinitePlaneXTranslation, transform.x, transform.delta);
-    transform.y && updateTransformationAtom(accessor, infinitePlaneYTranslation, transform.y, transform.delta);
-    transform.zoom && updateTransformationAtom(accessor, infinitePlaneZoom, transform.zoom, transform.delta);
+export const infinitePlaneXTranslation = atomFamily<number, string>({
+  key: StateKeys.XTranslation,
+  default: 0
+});
+
+export const infinitePlaneYTranslation = atomFamily<number, string>({
+  key: StateKeys.YTranslation,
+  default: 0
+});
+
+export const infinitePlaneZoom = atomFamily<number, string>({
+  key: StateKeys.Zoom,
+  default: 1
+});
+
+export const infinitePlaneOrignPosition = atomFamily<ICenterPoint, string>({
+  key: StateKeys.OriginPosition,
+  default: null,
+});
+
+export const infintePlaneTransformation: (infinitePlaneId: string) => RecoilState<TransformationDescriptor> = selectorFamily<TransformationDescriptor, string>({
+  key: StateKeys.TransformationState,
+  get: infinitePlaneId => ({get}) => ({
+    x: get(infinitePlaneXTranslation(infinitePlaneId)),
+    y: get(infinitePlaneYTranslation(infinitePlaneId)),
+    zoom: get(infinitePlaneZoom(infinitePlaneId))
+  }),
+  set: infinitePlaneId => ({get, set}, newTransformation: TransformationDescriptor) => {
+    if (newTransformation.x) updateTransformationAtom({get, set}, infinitePlaneXTranslation(infinitePlaneId), newTransformation.x, newTransformation.delta);
+    if (newTransformation.y) updateTransformationAtom({get, set}, infinitePlaneYTranslation(infinitePlaneId), newTransformation.y, newTransformation.delta);
+    if (newTransformation.zoom) updateTransformationAtom({get, set}, infinitePlaneZoom(infinitePlaneId), newTransformation.zoom, newTransformation.delta);
   }
 });
 
-const updateTransformationAtom = ({get, set}: {get: Function, set: Function}, atom: any, value: number, delta: boolean = false) => {
-  const currentValue = get(atom);
+export const infintePlaneTransformationMatrix: (infinitePlaneId: string) => RecoilState<string> = selectorFamily<string, string>({
+  key: StateKeys.TransformationMatrx,
+  get: infinitePlaneId => ({get}) => {
+    const transformation = get(infintePlaneTransformation(infinitePlaneId));
+    return `matrix(${transformation.zoom}, 0, 0, ${transformation.zoom}, ${transformation.x}, ${transformation.y})`;
+  },
+  set: infinitePlaneId => ({set}, newTransformation: TransformationDescriptor) => {
+    set(infintePlaneTransformation(infinitePlaneId), newTransformation);
+  }
+});
+
+const updateTransformationAtom = ({get, set}: {get: Function, set: Function}, _atom: RecoilState<number>, value: number, delta: boolean = false) => {
+  const currentValue = get(_atom);
   const updatedValue = delta ? currentValue + value : value;
   if (updatedValue !== currentValue) {
     set(atom, updatedValue);
