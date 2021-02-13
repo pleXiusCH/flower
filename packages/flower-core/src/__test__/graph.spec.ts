@@ -1,9 +1,9 @@
 import Graph from "../graph";
-import { INodeImpl, PortType } from "@plexius/flower-interfaces";
+import { INodeImpl, PortType } from "@plexius/flower-interfaces/src";
 import Node from "../node";
 import Edge from "../edge";
 import { audit } from "rxjs/operators";
-import { interval, Observable, OperatorFunction } from "rxjs";
+import { interval, Observable } from "rxjs";
 
 const simpleOutputNodeImpl: INodeImpl = {
   type: 'simpleOutput',

@@ -41,21 +41,12 @@ test('should remove graph by uuid or throw', () => {
 });
 
 test('should execute an active graph by uuid or throw', async () => {
-  const activitySubscription = flower.getActivities$().subscribe(activity => {
-    console.log(activity);
-  });
   const graph = flower.addGraph();
   expect(flower.getGraphs().size).toBe(1);
-  const outputs = await graph?.execute();
-  console.dir(outputs);
-  activitySubscription.unsubscribe();
+  await graph?.execute();
 });
 
 test('should log activity', () => {
-  const activitySubscription = flower.getActivities$().subscribe(activity => {
-    console.log(activity);
-  });
-  const graph = flower.addGraph();
+  flower.addGraph();
   expect(flower.getGraphs().size).toBe(1);
-  activitySubscription.unsubscribe();
 });

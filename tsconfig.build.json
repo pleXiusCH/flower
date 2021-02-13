@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es6",
+
+    /* Type Definitions */
+    "lib": ["esnext"],
+    "types": ["node"],
+
+    /* Project References */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    /* Code Quality */
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "strict": true,
+    "stripInternal": true,
+
+    /* Code Features */
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

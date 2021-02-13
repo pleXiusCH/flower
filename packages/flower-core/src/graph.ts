@@ -1,4 +1,4 @@
-import { INodeImpl, IPortDescriptor } from "@plexius/flower-interfaces";
+import { INodeImpl, IPortDescriptor } from "@plexius/flower-interfaces/src";
 import { BehaviorSubject, OperatorFunction } from "rxjs";
 import { v4 as uuidv4 } from 'uuid';
 import Edge from "./edge";

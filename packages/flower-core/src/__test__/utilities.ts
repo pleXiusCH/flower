@@ -1,6 +1,6 @@
 import { AdditionImpl, EmitNumberImpl, TapImpl } from "@plexius/flower-nodes";
 import Graph from "../graph";
-import { PortType } from "@plexius/flower-interfaces";
+import { PortType } from "@plexius/flower-interfaces/src";
 
 export const createAdditionGraph = () => {
   const graph = new Graph();

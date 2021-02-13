@@ -1,4 +1,4 @@
-import { INodeImpl, SideEffectsFn } from "@plexius/flower-interfaces";
+import { INodeImpl } from "@plexius/flower-interfaces/src";
 import Node from '../node';
 
 const testNodeImpl: INodeImpl = {

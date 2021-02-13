@@ -1,4 +1,4 @@
-import { IPortDescriptor } from "@plexius/flower-interfaces";
+import { IPortDescriptor } from "@plexius/flower-interfaces/src";
 import { Observable, OperatorFunction, Subject } from "rxjs";
 import { filter, takeUntil } from "rxjs/operators";
 import { v4 as uuidv4 } from 'uuid';

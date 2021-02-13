@@ -3,11 +3,8 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    "jsx": "react",
   },
-  "references": [
-    { "path":  "../flower-core" },
-    { "path":  "../flower-interfaces" }
-  ],
   "exclude": [
     "node_modules",
     "dist"

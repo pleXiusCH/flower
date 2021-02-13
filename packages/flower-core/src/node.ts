@@ -22,7 +22,7 @@ import {
   INodeImpl,
   NodeOutputs,
   SideEffectsFn,
-} from "@plexius/flower-interfaces";
+} from "@plexius/flower-interfaces/src";
 import { tag } from "rxjs-spy/operators/tag";
 import ActivitiesListener$ from "./activitiesListener";
 
