@@ -17,6 +17,7 @@ import {INodeImpl} from '@plexius/flower-interfaces';
 import ViewSelector from "./ViewSelector";
 import {ViewMap} from "./ViewMap";
 import { Subject } from 'rxjs';
+import GraphView from '../GraphView';
 
 
 export const MosaicView = (props: { id: number, path: MosaicBranch[], onCreateNode: CreateNode<number> }) => {
@@ -35,31 +36,33 @@ export const MosaicView = (props: { id: number, path: MosaicBranch[], onCreateNo
 
 export const MosaicEditor = (props: { implementations: INodeImpl[] }) => {
 
-  const [mosaicStateValue, setMosaicState] = useRecoilState(mosaicState);
-  const [mosaicViewCount, setMosaicViewCount] = useState(2);
+  // const [mosaicStateValue, setMosaicState] = useRecoilState(mosaicState);
+  // const [mosaicViewCount, setMosaicViewCount] = useState(2);
   const setImplementations = useSetRecoilState(implementations);
-  const _editorEvents$: Subject<EditorEvents> = useRecoilValue(editorEvents$);
+  // const _editorEvents$: Subject<EditorEvents> = useRecoilValue(editorEvents$);
 
   useEffect(() => {
     setImplementations(props.implementations);
   }, [props.implementations]);
 
-  const createNode = () => {
-    setMosaicViewCount(mosaicViewCount + 1);
-    return mosaicViewCount + 1;
-  };
+  // const createNode = () => {
+  //   setMosaicViewCount(mosaicViewCount + 1);
+  //   return mosaicViewCount + 1;
+  // };
 
   const onChange = (currentMosaicState: MosaicNode<number> | null) => {
-    setMosaicState(currentMosaicState);
-    _editorEvents$?.next(EditorEvents.RearrangeWindows);
+    // setMosaicState(currentMosaicState);
+    // _editorEvents$?.next(EditorEvents.RearrangeWindows);
   };
 
-  return (
-      <Mosaic<number>
-          className="mosaic-blueprint-theme bp3-dark"
-          renderTile={(id, path) => <MosaicView id={id} path={path} onCreateNode={createNode}/>}
-          value={mosaicStateValue}
-          onChange={onChange}
-          zeroStateView={<MosaicZeroState createNode={createNode}/>}
-      />);
+  // return (
+  //     <Mosaic<number>
+  //         className="mosaic-blueprint-theme bp3-dark"
+  //         renderTile={(id, path) => <MosaicView id={id} path={path} onCreateNode={createNode}/>}
+  //         value={mosaicStateValue}
+  //         onChange={onChange}
+  //         zeroStateView={<MosaicZeroState createNode={createNode}/>}
+  //     />);
+
+  return (<GraphView></GraphView>);
 };

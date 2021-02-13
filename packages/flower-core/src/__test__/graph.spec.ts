@@ -29,7 +29,6 @@ const defaultSetupGraphOptions = {
   outputNodeImpl: simpleOutputNodeImpl,
   inputNodeImpl: simpleInputNodeImpl,
   createEdge: true,
-  edgeModifier: null as OperatorFunction<any, any>
 }
 
 function setupTestGraph(options = {}) {
@@ -40,7 +39,6 @@ function setupTestGraph(options = {}) {
   const edge = setup.createEdge ? graph.createEdge(
     { nodeId: outputNode.uuid, name: 'output', type: PortType.Output }, 
     { nodeId: inputNode.uuid, name: 'input', type: PortType.Input },
-    setup.edgeModifier
   ) : null;
   return {
     graph: graph,
@@ -63,13 +61,15 @@ test('should create tow simple nodes in the graph', () => {
 test('should create an edge between two nodes in the graph', () => {
   const testGraph = setupTestGraph();
   const edge = testGraph.edges[0];
-  expect(testGraph.graph.getEdge(edge.uuid)).toBeInstanceOf(Edge);
+  expect(edge).toBeInstanceOf(Edge);
+  expect(testGraph.graph.getEdge(edge!.uuid)).toBeInstanceOf(Edge);
 });
 
 test('should create an edge with a modifier between two nodes in the graph', () => {
   const testGraph = setupTestGraph({edgeModifier: audit(() => interval(1000))});
   const edge = testGraph.edges[0];
-  expect(testGraph.graph.getEdge(edge.uuid).getModifier()).not.toBeNull();
+  expect(edge).toBeInstanceOf(Edge);
+  expect(testGraph.graph.getEdge(edge!.uuid).getModifier()).not.toBeNull();
 });
 
 test('should get the nodes observable in the graph', () => {

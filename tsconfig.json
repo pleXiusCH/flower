@@ -3,11 +3,12 @@
     "composite": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": ".",
-    // "baseUrl": ".",
+    "rootDir": "./packages",
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "declaration": true,
+    "strict": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
     "downlevelIteration": true,
@@ -23,7 +24,7 @@
       "es6",
       "dom"
     ],
-    "baseUrl": "./",
+
     // "paths": {
     //   "@plexius/flower-core": ["packages/flower-core/src/index"],
     //   "@plexius/flower-interfaces": ["packages/flower-interfaces/src/index"],

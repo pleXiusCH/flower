@@ -51,11 +51,11 @@ export default class Graph extends ActivitiesListener$ {
   }
 
   public getNode(nodeId: string): Node {
-    return this.nodes$.getValue().get(nodeId);
+    return this.nodes$.getValue().get(nodeId)!;
   }
 
   public getEdge(edgeId: string): Edge {
-    return this.edges$.getValue().get(edgeId);
+    return this.edges$.getValue().get(edgeId)!;
   }
 
   public getNodes$() {

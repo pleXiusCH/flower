@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, FC, useState, useCallback } from "react";
+import React, { useRef, useEffect, FC, useState, useCallback, useLayoutEffect } from "react";
 import styled, { css } from "styled-components";
 import { IPortDescriptor, PortType } from "@plexius/flower-interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -64,6 +64,10 @@ const Port: FC<PortProps> = (props) => {
   const unselect = () => {
     setPortIsSelected(false);
   };
+
+  useLayoutEffect(() => {
+    console.error("chaged....");
+  }, [_infintePlaneTransformation]);
 
   const setCenterPoint = useCallback(() => {
     if (portRef?.current) {

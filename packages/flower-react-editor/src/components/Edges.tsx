@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
 import { Observable } from "rxjs";
 import { Edge as FlowerEdge } from "@plexius/flower-core";
 import { useObservable } from "react-use";
 import styled from "styled-components";
 import Edge from "./Edge";
-import { editorEvents$, EditorEvents } from "../state/editorState";
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { filter } from "rxjs/operators";
-import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePlaneOrignPosition } from '../state/infinitePlaneState';
+import { useRecoilValue } from 'recoil';
+import { infintePlaneTransformationMatrix, infinitePlaneOrignPosition } from '../state/infinitePlaneState';
 import { ICenterPoint } from "../state/portsState";
 
 export interface IEdgesProps {
@@ -28,7 +26,7 @@ const Origin = styled.g``;
 
 const Edges: React.SFC<IEdgesProps> = (props) => {
   const edges = useObservable<Map<string, FlowerEdge>>(props.edges$, new Map());
-  const transformationMatrix: string = useRecoilValue(infintePlaneTransformationMatrix);
+  const transformationMatrix = useRecoilValue(infintePlaneTransformationMatrix);
   const [relativePosition, setRelativePosition] = useState({x: 0, y: 0});
   const svgRef = useRef<SVGSVGElement>(null);
   const infinitePlaneOrignPos: ICenterPoint = useRecoilValue(infinitePlaneOrignPosition);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { fromEvent, Subscription } from 'rxjs';
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
-import { infintePlaneTransformationMatrix, TransformationDescriptor, infinitePlaneOrignPosition } from '../state/infinitePlaneState';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { infintePlaneTransformationMatrix, infinitePlaneOrignPosition, infintePlaneTransformation } from '../state/infinitePlaneState';
 import { ICenterPoint, computeCenterPoint } from '../state/portsState';
 import { filter } from 'rxjs/operators';
 import { useObservable } from 'react-use';
@@ -27,13 +27,14 @@ const Plane = styled.div`
   left: 50%;
 `;
 
-export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
+export const InfinitePlane: React.FC<InfinitePlaneProps> = (props) => {
 
   const planeRef = useRef<HTMLDivElement>(null);
   const [ isHover, setIsHover ] = useState(false);
   const [ isPointerDown, setIsPointerDown ] = useState(false);
-  const setOriginPosition: (point: ICenterPoint) => void = useSetRecoilState(infinitePlaneOrignPosition);
-  const [ transformationMatrix, setTransformationMatrix ]: [ string, (transformation: TransformationDescriptor) => void] = useRecoilState(infintePlaneTransformationMatrix);
+  const setOriginPosition = useSetRecoilState(infinitePlaneOrignPosition);
+  const setTransformation = useSetRecoilState(infintePlaneTransformation);
+  const transformationMatrix = useRecoilValue(infintePlaneTransformationMatrix);
   const editorEventReaarangeWindows = useObservable(useRecoilValue(editorEvents$)
     .pipe(filter<{event: String, time: number}>(({event}) => (event === EditorEvents.RearrangeWindows))));
 
@@ -45,9 +46,9 @@ export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
   const onWheel = (e: React.WheelEvent) => {
     e.stopPropagation();
     if (e.ctrlKey) {
-      setTransformationMatrix({ zoom: (e.deltaY * 0.005), delta: true });
+      setTransformation({ zoom: (e.deltaY * 0.005), delta: true });
     } else {
-      setTransformationMatrix({ x: e.deltaX, y: e.deltaY, delta: true });
+      setTransformation({ x: e.deltaX, y: e.deltaY, delta: true });
     }
   };
 
@@ -57,7 +58,7 @@ export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
     if (isPointerDown && planeRef?.current) {
       mouseMoveSubscription = mouseMove$.subscribe(e => {
         if (e.target === planeRef.current) {
-          setTransformationMatrix({x: e.movementX, y: e.movementY, delta: true});
+          setTransformation({x: e.movementX, y: e.movementY, delta: true});
         }
       });
     }
@@ -68,8 +69,7 @@ export const InfinitePlane: React.SFC<InfinitePlaneProps> = (props) => {
 
   useEffect(() => {
     if (planeRef?.current) {
-      const centerPoint: ICenterPoint = computeCenterPoint(planeRef.current.getBoundingClientRect());
-      console.log("setOriginPosition", centerPoint, planeRef.current);      
+      const centerPoint: ICenterPoint = computeCenterPoint(planeRef.current.getBoundingClientRect());    
       setOriginPosition(centerPoint);
     }
   }, [planeRef, editorEventReaarangeWindows]);

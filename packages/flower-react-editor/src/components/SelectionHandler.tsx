@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
-import Graph from '@plexius/flower-core';
+import { Graph } from '@plexius/flower-core';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { selectedPorts, PortStateInt, selectedPortIds } from './../state/portsState';
 

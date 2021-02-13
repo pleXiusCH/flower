@@ -35,9 +35,9 @@ export default class Node<T = any> extends ActivitiesListener$ {
   public readonly uuid: string;
   private lifecycle$: Subject<Lifecycle> = new Subject();
   private connectObservable$: ConnectSubject = new Subject();
-  private activationSubscription: Subscription = null;
-  private inputs$: Observable<Map<string, any>> = null;
-  private state$: BehaviorSubject<T> = null;
+  private activationSubscription: Subscription;
+  private inputs$: Observable<Map<string, any>>;
+  private state$: BehaviorSubject<T>;
   private outputs: NodeOutputs = new Map();
   private activationFunction: ActivationFn<T> = () => Promise.resolve(new Map());
   private sideEffectsFunction: SideEffectsFn<T> = () => {};
@@ -51,7 +51,7 @@ export default class Node<T = any> extends ActivitiesListener$ {
       this.setActivationFunction(nodeImpl.activationFunction);
     nodeImpl.sideEffectsFunction &&
       this.setSideEffectsFunction(nodeImpl.sideEffectsFunction);
-    this.initializeState(nodeImpl.initialState);
+    this.initializeState(nodeImpl.initialState!);
     this.bindConnectToInputs();
     this.createOutputs();
     this.subscribeActivationObserver();
@@ -63,7 +63,7 @@ export default class Node<T = any> extends ActivitiesListener$ {
 
   public getOutputObservable(propertyName: string) {
     if (!this.outputs.has(propertyName)) { return null; }
-    return this.outputs.get(propertyName).asObservable();
+    return this.outputs.get(propertyName)!.asObservable();
   }
 
   public connectObservableToInput(
@@ -83,19 +83,19 @@ export default class Node<T = any> extends ActivitiesListener$ {
 
   public setState(newState: T): Observable<T> {
     if (typeof newState === "object") {
-      this.state$.next({ ...newState });
+      this.state$!.next({ ...newState });
     } else {
-      this.state$.next(newState);
+      this.state$!.next(newState);
     }
-    return this.state$.asObservable();
+    return this.state$!.asObservable();
   }
 
   public getState$() {
-    return this.state$.asObservable();
+    return this.state$!.asObservable();
   }
 
   public patchState(newState: any): Node<T> {
-    this.setState({ ...this.state$.getValue(), ...newState });
+    this.setState({ ...this.state$!.getValue(), ...newState });
     return this;
   }
 

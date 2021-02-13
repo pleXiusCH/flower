@@ -13,7 +13,7 @@ const activationFunction: ActivationFn<EmitNumberState> = (inputs, state) => {
 };
 
 const sideEffectsFunction: SideEffectsFn<EmitNumberState> = (props) => {
-  let template = props.state && props.state.htmlTemplate;
+  let template = props.state?.htmlTemplate;
   if (!template) {
     const changeHandler = (e: Event & { target: { value: string } }) => {
       props.patchState({ emitValue: Number.parseFloat(e.target.value) });

@@ -73,8 +73,8 @@ export const portsBoundingBox = (...ids: string[]) => {
 };
 
 const computeWrappingBoundingBox = (points: ICenterPoint[]) => {
-  let x: number = null;
-  let y: number = null;
+  let x: number = 0;
+  let y: number = 0;
   let width: number = 0;
   let height: number = 0;
 

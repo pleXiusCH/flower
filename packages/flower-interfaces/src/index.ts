@@ -32,11 +32,11 @@ export type ActivationFn<T = any> = (
   state: T,
 ) => Promise< Map<string, any>>;
 
-export type SideEffectsFn<T = any> = (props?: {
+export type SideEffectsFn<T = any> = (props: {
   inputs: Map<string, any>;
   state: T;
-  setState?: (newState: T) => void;
-  patchState?: (state: {}) => void;
+  setState: (newState: T) => void;
+  patchState: (state: {}) => void;
 }) => void;
 
 export type ConnectSubject = Subject<{

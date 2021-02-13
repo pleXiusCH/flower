@@ -1,3 +1,4 @@
+import { MosaicNode } from "react-mosaic-component/lib/types";
 import { atom } from "recoil";
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
@@ -20,7 +21,7 @@ export const mosaicState = atom({
     first: 1,
     second: 2,
     splitPercentage: 20
-  }
+  } as MosaicNode<number>
 });
 
 export const mosaicViews = (id: number) => atom({

@@ -47,7 +47,7 @@ export default class Flower extends ActivitiesListener$ {
 
   async executeGraph(uuid: string) {
     this.checkIfGraphPresent(uuid);
-    return await this.activeGraphs.get(uuid).execute();
+    return await this.activeGraphs.get(uuid)?.execute();
   }
 
   getStatistics() {
