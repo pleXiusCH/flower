@@ -15,6 +15,10 @@
   },
   "projects": [
     {
+      "packageName": "@plexius/flower-common-rig",
+      "projectFolder": "rigs/flower-common-rig"
+    },
+    {
       "packageName": "@plexius/flower-interfaces",
       "projectFolder": "packages/flower-interfaces"
     },

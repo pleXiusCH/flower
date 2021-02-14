@@ -17,7 +17,7 @@ export default class Edge<T = any> extends ActivitiesListener$ {
   private dataSource$: Observable<T>;
   private data$: Observable<T>;
   private events$: Subject<EdgeEvent> = new Subject();
-  private modifier: OperatorFunction<T, T> = null;
+  private modifier: OperatorFunction<T, T>;
 
   constructor(graph: Graph, from: IPortDescriptor, to: IPortDescriptor) {
     super();
@@ -50,7 +50,7 @@ export default class Edge<T = any> extends ActivitiesListener$ {
     if (from.nodeId && from.name) {
       this.dataSource$ = this.parentGraph
         .getNode(from.nodeId)
-        .getOutputObservable(from.name);
+        .getOutputObservable(from.name)!;
       this.data$ = this.dataSource$.pipe(
         takeUntil(events$.pipe(filter((e) => e === EdgeEvent.ApplyModifier))),
       );

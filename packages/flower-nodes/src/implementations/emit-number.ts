@@ -7,7 +7,7 @@ export interface EmitNumberState {
   renderTarget?: HTMLElement;
 }
 
-const activationFunction: ActivationFn<EmitNumberState> = (inputs, state) => {
+const activationFunction: ActivationFn<EmitNumberState> = (_, state) => {
   // console.log("activation emit", state);
   return Promise.resolve(new Map([["number", state.emitValue]]));
 };

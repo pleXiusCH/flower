@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.build-base.json",
+
+    "compilerOptions": {
+        // "baseUrl": ".",
+        // "paths": {
+        // "@plexius/*": ["packages/*/src"],
+        // },
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+    }
+}

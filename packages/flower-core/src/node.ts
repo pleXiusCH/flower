@@ -23,15 +23,13 @@ import {
   NodeOutputs,
   SideEffectsFn,
 } from "@plexius/flower-interfaces/src";
-import { tag } from "rxjs-spy/operators/tag";
-import ActivitiesListener$ from "./activitiesListener";
 
 export enum Lifecycle {
   Created,
   Destroyed,
 }
 
-export default class Node<T = any> extends ActivitiesListener$ {
+export default class Node<T = any> {
   public readonly uuid: string;
   private lifecycle$: Subject<Lifecycle> = new Subject();
   private connectObservable$: ConnectSubject = new Subject();
@@ -44,7 +42,6 @@ export default class Node<T = any> extends ActivitiesListener$ {
   readonly type: string;
 
   constructor(readonly nodeImpl: INodeImpl<T>) {
-    super();
     this.uuid = uuidv4();
     this.type = nodeImpl.type;
     nodeImpl.activationFunction &&
@@ -55,9 +52,6 @@ export default class Node<T = any> extends ActivitiesListener$ {
     this.bindConnectToInputs();
     this.createOutputs();
     this.subscribeActivationObserver();
-    this.addActivity(`events::node::${this.uuid}`, this.lifecycle$.asObservable());
-    this.lifecycle$.asObservable().pipe(tag("node-lifecycle"))
-      .subscribe(event => console.log("node-lifecycle-event", this.uuid, event));
     this.lifecycle$.next(Lifecycle.Created);
   }
 
@@ -115,7 +109,7 @@ export default class Node<T = any> extends ActivitiesListener$ {
   }
 
   private initializeState(initialState: T) {
-    this.state$ = initialState ? new BehaviorSubject<T>(initialState) : new BehaviorSubject<T>(null);
+    this.state$ = new BehaviorSubject<T>(initialState);
   }
 
   private subscribeActivationObserver() {
@@ -144,10 +138,10 @@ export default class Node<T = any> extends ActivitiesListener$ {
             this.setOutputValues(response);
           })
           .catch(error=>{
-            console.error(error);
+            throw error;
           });
         }catch (error) {
-          console.error(error);
+          throw error
         }
       });
   }
@@ -155,7 +149,7 @@ export default class Node<T = any> extends ActivitiesListener$ {
   private setOutputValues(newOutputs: Map<string, any>) {
     for (const [key, value] of newOutputs) {
       if (this.outputs.has(key)) {
-        this.outputs.get(key).next(value);
+        this.outputs.get(key)!.next(value);
       }
     }
   }

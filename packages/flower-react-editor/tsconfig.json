@@ -1,12 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./node_modules/@plexius/flower-common-rig/profiles/default/tsconfig-base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "jsx": "react",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "jsx": "react",
   },
   "exclude": [
-    "node_modules",
-    "dist"
+      "node_modules",
+      "dist"
   ]
 }

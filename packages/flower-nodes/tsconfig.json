@@ -1,11 +1,18 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src"
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+    "extends": "./node_modules/@plexius/flower-common-rig/profiles/default/tsconfig-base.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "lib": [
+            "dom", 
+            "esnext"
+        ],
+        "types": [
+            "heft-jest"
+        ],
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
 }

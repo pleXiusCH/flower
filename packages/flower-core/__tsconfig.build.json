@@ -6,7 +6,7 @@
         "declaration": true,
         "outDir": "./dist",
         "rootDir": "./src",
-        "baseUrl": ".",
+        "baseUrl": "."
     },
     "references": [{
         "path": "../flower-interfaces/tsconfig.build.json"

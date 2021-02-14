@@ -15,9 +15,6 @@ export default class Flower extends ActivitiesListener$ {
 
   constructor() {
     super();
-    this.addActivity(`events::global`, this.events$.asObservable());
-    this.events$.subscribe(activity => console.log(activity));
-    this.getActivities$().subscribe(activity => console.log(activity));
   }
 
   addGraph(graph = new Graph()) {

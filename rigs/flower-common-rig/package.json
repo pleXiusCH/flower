@@ -1,0 +1,29 @@
+{
+    "name": "@plexius/flower-common-rig",
+    "version": "0.0.1",
+    "description": "A rig package for @plexius/flower projects that build using Heft",
+    "license": "MIT",
+    "scripts": {
+        "build": ""
+    },
+    "author": {
+        "name": "Peter Unger",
+        "email": "peter@pexius.ch"
+        },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pleXiusCH/flower",
+        "directory": "rigs/flower-common-rig"
+    },
+    "peerDependencies": {
+        "@rushstack/heft": "^0.24.2"
+    },
+    "dependencies": {
+        "@types/heft-jest": "1.0.1",
+        "eslint": "~7.12.1",
+        "typescript": "^4.1.3"
+    },
+    "devDependencies": {
+        "@rushstack/heft": "~0.24.2"
+    }
+}
