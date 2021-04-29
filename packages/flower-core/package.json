@@ -22,7 +22,6 @@
   "license": "MIT",
   "devDependencies": {
     "@plexius/flower-common-rig": "workspace:^0.0.1",
-    "@plexius/flower-nodes": "workspace:^0.0.1",
     "@rushstack/heft": "~0.24.2",
     "@types/heft-jest": "1.0.2",
     "@types/uuid": "^8.0.0",
