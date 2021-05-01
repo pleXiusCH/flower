@@ -2,7 +2,12 @@
     "extends": "./node_modules/@plexius/flower-common-rig/profiles/default/tsconfig-base.json",
     "compilerOptions": {
         "types": ["heft-jest", "node"],
-        "rootDir": "./src",
-        "outDir": "./dist",
-    }
+        "rootDirs": ["./src"],
+        "outDir": "./lib",
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": [
+      "node_modules",
+      "lib"
+    ]
 }

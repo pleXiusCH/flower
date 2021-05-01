@@ -11,6 +11,7 @@ importers:
       '@plexius/flower-interfaces': workspace:^0.0.1
       '@rushstack/heft': ~0.24.2
       '@types/heft-jest': 1.0.2
+      '@types/node': ~15.0.1
       '@types/uuid': ^8.0.0
       rxjs: ^6.5.3
       uuid: ^8.3.2
@@ -21,6 +22,7 @@ importers:
       '@plexius/flower-common-rig': link:../../rigs/flower-common-rig
       '@rushstack/heft': 0.24.4
       '@types/heft-jest': 1.0.2
+      '@types/node': 15.0.1
       '@types/uuid': 8.3.0
       rxjs: 6.6.7
 
@@ -5359,7 +5361,7 @@ packages:
       cross-spawn: 3.0.1
       gaze: 1.1.3
       get-stdin: 4.0.1
-      glob: 7.1.6
+      glob: 7.0.6
       in-publish: 2.0.1
       lodash: 4.17.21
       meow: 3.7.0

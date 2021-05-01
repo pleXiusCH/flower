@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;;AAAA,MAAa,IAAI;CAEhB;AAFD,oBAEC","sourcesContent":["export class Test {\n\n}"]}

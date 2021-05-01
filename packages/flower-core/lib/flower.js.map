@@ -1,0 +1,1 @@
+{"version":3,"file":"flower.js","sourceRoot":"","sources":["../src/flower.ts"],"names":[],"mappings":";;;AAAA,MAAa,MAAM;IACjB;QACE,OAAO,CAAC,GAAG,CAAC,eAAe,CAAC,CAAC;IAC/B,CAAC;CACF;AAJD,wBAIC","sourcesContent":["export class Flower {\n  constructor() {\n    console.log(\"Flower lives!\");\n  }\n}"]}

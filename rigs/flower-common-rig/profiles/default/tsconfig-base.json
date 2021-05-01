@@ -3,11 +3,11 @@
 
     "compilerOptions": {
         "module": "commonjs",
-        "moduleResolution": "node",
-        "target": "es6",
+        /*"moduleResolution": "node",*/
+        "target": "es2017",
 
         /* Type Definitions */
-        "lib": ["esnext"],
+        "lib": ["es2017"],
         "types": [
             "heft-jest"
         ],
@@ -34,9 +34,5 @@
         "experimentalDecorators": true,
         "downlevelIteration": true,
         "esModuleInterop": true
-    },
-    "exclude": [
-      "node_modules",
-      "dist"
-    ]
+    }
   }
