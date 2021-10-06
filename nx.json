@@ -1,0 +1,30 @@
+{
+  "extends": "@nrwl/workspace/presets/npm.json",
+  "npmScope": "flower",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  },
+  "projects": {
+    "flower-core": {
+      "tags": []
+    },
+    "flower-react": {
+      "tags": []
+    },
+    "flower-ui": {
+      "tags": []
+    },
+    "flower-ui-e2e": {
+      "tags": [],
+      "implicitDependencies": ["flower-ui"]
+    }
+  }
+}

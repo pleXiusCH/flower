@@ -1,0 +1,201 @@
+{
+  "version": 2,
+  "projects": {
+    "flower-core": {
+      "root": "packages/flower-core",
+      "sourceRoot": "packages/flower-core/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/flower-core",
+            "main": "packages/flower-core/src/index.ts",
+            "tsConfig": "packages/flower-core/tsconfig.lib.json",
+            "assets": ["packages/flower-core/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/flower-core/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/flower-core"],
+          "options": {
+            "jestConfig": "packages/flower-core/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "flower-react": {
+      "root": "packages/flower-react",
+      "sourceRoot": "packages/flower-react/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:package",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/flower-react",
+            "tsConfig": "packages/flower-react/tsconfig.lib.json",
+            "project": "packages/flower-react/package.json",
+            "entryFile": "packages/flower-react/src/index.ts",
+            "external": ["react/jsx-runtime"],
+            "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+            "assets": [
+              {
+                "glob": "packages/flower-react/README.md",
+                "input": ".",
+                "output": "."
+              }
+            ]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/flower-react/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/flower-react"],
+          "options": {
+            "jestConfig": "packages/flower-react/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "flower-ui": {
+      "root": "packages/flower-ui",
+      "sourceRoot": "packages/flower-ui/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/flower-ui",
+            "index": "packages/flower-ui/src/index.html",
+            "main": "packages/flower-ui/src/main.tsx",
+            "polyfills": "packages/flower-ui/src/polyfills.ts",
+            "tsConfig": "packages/flower-ui/tsconfig.app.json",
+            "assets": [
+              "packages/flower-ui/src/favicon.ico",
+              "packages/flower-ui/src/assets"
+            ],
+            "styles": ["packages/flower-ui/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "packages/flower-ui/src/environments/environment.ts",
+                  "with": "packages/flower-ui/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "flower-ui:build",
+            "hmr": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "flower-ui:build:production",
+              "hmr": false
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/flower-ui/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/flower-ui"],
+          "options": {
+            "jestConfig": "packages/flower-ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "flower-ui-e2e": {
+      "root": "packages/flower-ui-e2e",
+      "sourceRoot": "packages/flower-ui-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "packages/flower-ui-e2e/cypress.json",
+            "devServerTarget": "flower-ui:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "flower-ui:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/flower-ui-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "flower-ui"
+}

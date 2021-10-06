@@ -1,11 +1,13 @@
 {
-    "extends": "./node_modules/@plexius/flower-common-rig/profiles/default/tsconfig-base.json",
-    "compilerOptions": {
-        "outDir": "./dist",
-        "rootDir": "./src",
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
     },
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

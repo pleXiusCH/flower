@@ -1,38 +1,4 @@
 {
-  "name": "@plexius/flower-core",
-  "version": "0.0.1",
-  "description": "flower-core",
-  "main": "dist/index",
-  "types": "dist/index",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "heft build --clean"
-  },
-  "author": {
-    "name": "Peter Unger",
-    "email": "peter@pexius.ch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pleXiusCH/flower",
-    "directory": "packages/flower-core"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "@plexius/flower-common-rig": "workspace:^0.0.1",
-    "@plexius/flower-nodes": "workspace:^0.0.1",
-    "@rushstack/heft": "~0.24.2",
-    "@types/heft-jest": "1.0.2",
-    "@types/uuid": "^8.0.0",
-    "rxjs": "^6.5.3"
-  },
-  "dependencies": {
-    "@plexius/flower-interfaces": "workspace:^0.0.1",
-    "uuid": "^8.3.2"
-  },
-  "peerDependencies": {
-    "rxjs": "^6.5.3"
-  }
+  "name": "@flower/core",
+  "version": "0.0.1"
 }
