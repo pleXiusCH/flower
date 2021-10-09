@@ -2,10 +2,12 @@ import styles from './app.module.scss';
 import { Route, Link } from 'react-router-dom';
 import { FlowerReact } from '@flower/react';
 
+import { initialElements } from './initialData';
+
 export function App() {
   return (
     <div className={styles.app}>
-      <FlowerReact />
+      <FlowerReact initialElements={initialElements} />
     </div>
   );
 }

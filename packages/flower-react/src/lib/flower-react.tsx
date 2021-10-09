@@ -1,18 +1,48 @@
 import './flower-react.module.scss';
-import ReactFlow from 'react-flow-renderer';
+import React, { useState } from 'react';
 
-const elements = [
-  { id: '1', type: 'input', data: { label: 'Node 1' }, position: { x: 250, y: 5 } },
-  // you can also pass a React Node as a label
-  { id: '2', data: { label: <div>Node 2</div> }, position: { x: 100, y: 100 } },
-  { id: 'e1-2', source: '1', target: '2', animated: true },
-];
+import ReactFlow, {
+  removeElements,
+  addEdge,
+  MiniMap,
+  Controls,
+  Background,
+  Elements,
+  Edge,
+  Connection,
+  OnLoadFunc
+} from 'react-flow-renderer';
 
-/* eslint-disable-next-line */
-export interface FlowerReactProps {}
+const onLoad: OnLoadFunc = (reactFlowInstance) => {
+  console.log('flow loaded:', reactFlowInstance);
+  reactFlowInstance.fitView();
+};
+
+export interface FlowerReactProps<T = any> {
+  initialElements: Elements<T> | (() => Elements<T>);
+  flowerInstance?: any;
+}
 
 export function FlowerReact(props: FlowerReactProps) {
-  return <ReactFlow elements={elements} />;
-}
+  const [elements, setElements] = useState<Elements>(props.initialElements);
+  const [flowerInstance, setFlowerInstance] = useState<any>(props.flowerInstance);
+  const onElementsRemove = (elementsToRemove: Elements) => setElements((els) => removeElements(elementsToRemove, els));
+  const onConnect = (params: Edge | Connection) => setElements((els) => addEdge(params, els));
+
+  return (
+    <ReactFlow
+      elements={elements}
+      onElementsRemove={onElementsRemove}
+      onConnect={onConnect}
+      onLoad={onLoad}
+      snapToGrid={true}
+      snapGrid={[15, 15]}
+    >
+      <MiniMap />
+      <Controls />
+      <Background color="#aaa" gap={16} />
+    </ReactFlow>
+  );
+};
 
 export default FlowerReact;
