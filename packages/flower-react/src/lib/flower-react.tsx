@@ -1,5 +1,5 @@
 import './flower-react.module.scss';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ReactFlow, {
   removeElements,
@@ -13,6 +13,8 @@ import ReactFlow, {
   OnLoadFunc
 } from 'react-flow-renderer';
 
+import { computeFlowerGraph } from '@flower/core'
+
 const onLoad: OnLoadFunc = (reactFlowInstance) => {
   console.log('flow loaded:', reactFlowInstance);
   reactFlowInstance.fitView();
@@ -25,9 +27,13 @@ export interface FlowerReactProps<T = any> {
 
 export function FlowerReact(props: FlowerReactProps) {
   const [elements, setElements] = useState<Elements>(props.initialElements);
-  const [flowerInstance, setFlowerInstance] = useState<any>(props.flowerInstance);
+  const [flowerInstance, setFlowerInstance] = useState<any>(computeFlowerGraph());
   const onElementsRemove = (elementsToRemove: Elements) => setElements((els) => removeElements(elementsToRemove, els));
   const onConnect = (params: Edge | Connection) => setElements((els) => addEdge(params, els));
+
+  useEffect(() => {
+    console.log("new flower instance:", flowerInstance)
+  }, [flowerInstance])
 
   return (
     <ReactFlow

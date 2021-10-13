@@ -1,4 +1,8 @@
 {
   "name": "@flower/core",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+    "fp-ts": "^2.11.4",
+    "rxjs": "^7.4.0"
+  }
 }
