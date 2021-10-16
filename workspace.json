@@ -33,6 +33,38 @@
         }
       }
     },
+    "flower-interfaces": {
+      "root": "packages/flower-interfaces",
+      "sourceRoot": "packages/flower-interfaces/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/flower-interfaces",
+            "main": "packages/flower-interfaces/src/index.ts",
+            "tsConfig": "packages/flower-interfaces/tsconfig.lib.json",
+            "assets": ["packages/flower-interfaces/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/flower-interfaces/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/flower-interfaces"],
+          "options": {
+            "jestConfig": "packages/flower-interfaces/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "flower-react": {
       "root": "packages/flower-react",
       "sourceRoot": "packages/flower-react/src",
@@ -173,6 +205,38 @@
           "outputs": ["{options.outputFile}"],
           "options": {
             "lintFilePatterns": ["packages/flower-ui-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "node-impls": {
+      "root": "packages/node-impls",
+      "sourceRoot": "packages/node-impls/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/node-impls",
+            "main": "packages/node-impls/src/index.ts",
+            "tsConfig": "packages/node-impls/tsconfig.lib.json",
+            "assets": ["packages/node-impls/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["packages/node-impls/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/node-impls"],
+          "options": {
+            "jestConfig": "packages/node-impls/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }

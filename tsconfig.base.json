@@ -16,6 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@flower/core": ["packages/flower-core/src/index.ts"],
+      "@flower/interfaces": ["packages/flower-interfaces/src/index.ts"],
+      "@flower/node-impls": ["packages/node-impls/src/index.ts"],
       "@flower/react": ["packages/flower-react/src/index.ts"]
     }
   },

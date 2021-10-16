@@ -1,5 +1,4 @@
 import { option } from 'fp-ts'
-import { Monoid } from 'fp-ts/Monoid'
 import { Option } from 'fp-ts/Option'
 
 /*

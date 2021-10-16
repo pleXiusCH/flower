@@ -1,1 +1,1 @@
-export * from './lib/flower-core';
+export * from './lib';

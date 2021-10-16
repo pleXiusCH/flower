@@ -16,6 +16,9 @@
     "flower-core": {
       "tags": []
     },
+    "flower-interfaces": {
+      "tags": ["interfaces"]
+    },
     "flower-react": {
       "tags": []
     },
@@ -25,6 +28,9 @@
     "flower-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["flower-ui"]
+    },
+    "node-impls": {
+      "tags": ["impl"]
     }
   }
 }
