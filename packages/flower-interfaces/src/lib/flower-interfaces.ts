@@ -45,3 +45,15 @@ export type GraphDefinition = {
   nodes: NodeDefinition[],
   edges: EdgeDefinition[],
 }
+
+export type FlowerScheduler = {
+  schedule: (executionContext: FlowerExecutionContext) => void
+}
+
+export type FlowerWorker = {
+  execute: () => void
+}
+
+export type FlowerExecutionContext = {
+  execute: () => void
+}
