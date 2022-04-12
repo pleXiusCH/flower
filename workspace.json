@@ -7,31 +7,42 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/packages/flower-core",
             "main": "packages/flower-core/src/index.ts",
             "tsConfig": "packages/flower-core/tsconfig.lib.json",
-            "assets": ["packages/flower-core/*.md"]
+            "assets": [
+              "packages/flower-core/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["packages/flower-core/**/*.ts"]
+            "lintFilePatterns": [
+              "packages/flower-core/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/flower-core"],
+          "outputs": [
+            "coverage/packages/flower-core"
+          ],
           "options": {
             "jestConfig": "packages/flower-core/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "flower-interfaces": {
       "root": "packages/flower-interfaces",
@@ -39,31 +50,44 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/packages/flower-interfaces",
             "main": "packages/flower-interfaces/src/index.ts",
             "tsConfig": "packages/flower-interfaces/tsconfig.lib.json",
-            "assets": ["packages/flower-interfaces/*.md"]
+            "assets": [
+              "packages/flower-interfaces/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["packages/flower-interfaces/**/*.ts"]
+            "lintFilePatterns": [
+              "packages/flower-interfaces/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/flower-interfaces"],
+          "outputs": [
+            "coverage/packages/flower-interfaces"
+          ],
           "options": {
             "jestConfig": "packages/flower-interfaces/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": [
+        "interfaces"
+      ]
     },
     "flower-react": {
       "root": "packages/flower-react",
@@ -72,13 +96,17 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:package",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/packages/flower-react",
             "tsConfig": "packages/flower-react/tsconfig.lib.json",
             "project": "packages/flower-react/package.json",
             "entryFile": "packages/flower-react/src/index.ts",
-            "external": ["react/jsx-runtime"],
+            "external": [
+              "react/jsx-runtime"
+            ],
             "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
             "assets": [
               {
@@ -91,20 +119,27 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["packages/flower-react/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "packages/flower-react/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/flower-react"],
+          "outputs": [
+            "coverage/packages/flower-react"
+          ],
           "options": {
             "jestConfig": "packages/flower-react/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "flower-ui": {
       "root": "packages/flower-ui",
@@ -113,7 +148,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/packages/flower-ui",
             "index": "packages/flower-ui/src/index.html",
@@ -124,7 +161,9 @@
               "packages/flower-ui/src/favicon.ico",
               "packages/flower-ui/src/assets"
             ],
-            "styles": ["packages/flower-ui/src/styles.scss"],
+            "styles": [
+              "packages/flower-ui/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -168,20 +207,27 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["packages/flower-ui/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "packages/flower-ui/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/flower-ui"],
+          "outputs": [
+            "coverage/packages/flower-ui"
+          ],
           "options": {
             "jestConfig": "packages/flower-ui/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "flower-ui-e2e": {
       "root": "packages/flower-ui-e2e",
@@ -202,12 +248,20 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["packages/flower-ui-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "packages/flower-ui-e2e/**/*.{js,ts}"
+            ]
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": [
+        "flower-ui"
+      ]
     },
     "node-impls": {
       "root": "packages/node-impls",
@@ -215,51 +269,44 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
+          "executor": "@nrwl/js:tsc",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/packages/node-impls",
             "main": "packages/node-impls/src/index.ts",
             "tsConfig": "packages/node-impls/tsconfig.lib.json",
-            "assets": ["packages/node-impls/*.md"]
+            "assets": [
+              "packages/node-impls/*.md"
+            ]
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["packages/node-impls/**/*.ts"]
+            "lintFilePatterns": [
+              "packages/node-impls/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/node-impls"],
+          "outputs": [
+            "coverage/packages/node-impls"
+          ],
           "options": {
             "jestConfig": "packages/node-impls/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
-    }
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/react"
-  },
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "style": "scss",
-        "linter": "eslint",
-        "babel": true
       },
-      "component": {
-        "style": "scss"
-      },
-      "library": {
-        "style": "scss",
-        "linter": "eslint"
-      }
+      "tags": [
+        "impl"
+      ]
     }
-  },
-  "defaultProject": "flower-ui"
+  }
 }

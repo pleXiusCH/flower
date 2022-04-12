@@ -8,29 +8,34 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "parallel": 1
       }
     }
   },
-  "projects": {
-    "flower-core": {
-      "tags": []
-    },
-    "flower-interfaces": {
-      "tags": ["interfaces"]
-    },
-    "flower-react": {
-      "tags": []
-    },
-    "flower-ui": {
-      "tags": []
-    },
-    "flower-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["flower-ui"]
-    },
-    "node-impls": {
-      "tags": ["impl"]
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
     }
-  }
+  },
+  "defaultProject": "flower-ui"
 }
