@@ -1,24 +1,25 @@
 import { NodeImplBuilder } from '@flower/interfaces';
+import { html, css, LitElement, PropertyDeclarations } from 'lit';
+import { customElement } from 'lit/decorators.js';
+
+@customElement('simple-greeting-interface')
+export class SimpleGreetingInterface extends LitElement {
+  static styles = css`p { color: blue }`;
+
+  static properties: PropertyDeclarations = {
+    name: { type: String },
+  };
+
+  render() {
+    return html`<p>Hello, ${this.getAttribute("name")}!</p>`;
+  }
+}
 
 export const LogImplBuilder: NodeImplBuilder = () => ({
   name: 'Log',
   inputs: [{ id: 'in', dataType: 'string | number | object' }],
-  sideEffect: (_, inputs) =>
-    new Promise((resolve, reject) => {
-      try {
-        const logData = JSON.stringify(inputs[0][1]);
-        const failPercent = 20;
-        const randomNr = Math.floor(Math.random() * 100) + 1;
-        if (randomNr <= failPercent) {
-          throw new Error(`Could not access log output.`);
-        } else {
-          setTimeout(() => {
-            console.log(`[${Date.now()}]\tLog Node:\t${logData}`);
-            resolve(null);
-          }, 300);
-        }
-      } catch (e) {
-        reject(e);
-      }
-    }),
+  interface: {
+    tag: 'simple-greeting-interface',
+    customElement: SimpleGreetingInterface,
+  }
 });

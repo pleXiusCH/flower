@@ -1,9 +1,9 @@
 import styles from './Node.module.scss';
 
-import { createElement, DOMElement, memo, useEffect, useState } from 'react';
+import { createElement, DOMElement, memo, ReactElement, useEffect, useState } from 'react';
 import { Position } from 'react-flow-renderer';
 import { NodeImplementation, NodeInterface } from '@flower/interfaces';
-import { Port } from '../Port/Port';
+import { renderPorts } from '../Port/Port';
 
 /* eslint-disable-next-line */
 export interface NodeProps<S = unknown> {
@@ -22,51 +22,48 @@ const registerNodeInterface = (nodeInterface: NodeInterface) => {
 
 export const Node = memo<NodeProps>(({ data, isConnectable }) => {
 
-  const [nodeInterface, updateNodeInterface] = useState<DOMElement<any, any>>(createElement("span"));
+  const [nodeInterfaceTag, setNodeInterfaceTag] = useState("span");
+  const [name, setName] = useState("Peter");
 
   useEffect(() => {
     console.log("Node Interface init: ", data.nodeImplementation.interface);
     if (data?.nodeImplementation?.interface) {
       registerNodeInterface(data.nodeImplementation.interface);
-      const element = createElement(data.nodeImplementation.interface.tag);
-      updateNodeInterface(element);
+      setNodeInterfaceTag(data.nodeImplementation.interface.tag);
     }
+
+    setTimeout(() => {
+      console.log("Setting name to Parker");
+      setName("Parker");
+    }, 5000);
   }, [])
 
   console.log("Node data:", data);
-  const name = data.nodeImplementation.name;
+  const nodeImpl = data.nodeImplementation;
   return (
     <div className={styles['container']}>
       <div className={styles['header']}>
-        <span>{name}</span>
+        <span>{nodeImpl.name}</span>
       </div>
       <div className={styles['content']}>
         <div className={styles['portWrapper']}>
-          {data.nodeImplementation.inputs?.map(port => (
-            <Port
-              key={port.id}
-              label={port.label || port.id}
-              ptype="target"
-              position={Position.Left}
-              isConnectable
-              {...port}
-            />
-          ))}
+          {nodeImpl.inputs && renderPorts(nodeImpl.inputs.map(portDefinition => ({
+            ...portDefinition,
+            ptype: "target",
+            position: Position.Left,
+            isConnectable
+          })))}
         </div>
         <div className={styles['interface']}>
-          {nodeInterface}
+          {createElement(nodeInterfaceTag, { name })}
         </div>
         <div className={styles['portWrapper']}>
-          {data.nodeImplementation.outputs?.map(port => (
-            <Port
-              key={port.id}
-              label={port.label || port.id}
-              ptype="source"
-              position={Position.Right}
-              isConnectable
-              {...port}
-            />
-          ))}
+          {nodeImpl.outputs && renderPorts(nodeImpl.outputs.map(portDefinition => ({
+            ...portDefinition,
+            ptype: "source",
+            position: Position.Right,
+            isConnectable
+          })))}
         </div>
       </div>
     </div>

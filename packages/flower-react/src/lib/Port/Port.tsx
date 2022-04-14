@@ -2,13 +2,23 @@ import { PortDefinition } from '@flower/interfaces';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from './Port.module.scss';
 
+export type PortType = "source" | "target";
+
 export type PortProps = PortDefinition & {
-  id: string
-  ptype: "target" | "source"
-  position: Position.Left | Position.Right
+  ptype: PortType
+  position: Position
   isConnectable: boolean,
-  label: string
 }
+
+export const renderPorts = (ports: PortProps[]) => (
+  ports.map(port => (
+    <Port
+      {...port}
+      key={port.id}
+      label={port.label || port.id}
+    />
+  ))
+);
 
 export const Port = (props: PortProps) => {
   let className = ""
@@ -23,6 +33,7 @@ export const Port = (props: PortProps) => {
     default:
       break;
   }
+
   return (
     <div className={className}>
       <Handle
