@@ -1,8 +1,9 @@
 import styles from './Node.module.scss';
 
 import { createElement, DOMElement, memo, useEffect, useState } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
-import { NodeImplementation, NodeInterface, PortDefinition } from '@flower/interfaces';
+import { Position } from 'react-flow-renderer';
+import { NodeImplementation, NodeInterface } from '@flower/interfaces';
+import { Port } from '../Port/Port';
 
 /* eslint-disable-next-line */
 export interface NodeProps<S = unknown> {
@@ -12,40 +13,6 @@ export interface NodeProps<S = unknown> {
   isConnectable: boolean,
 }
 
-export type PortProps = PortDefinition & {
-  id: string
-  ptype: "target" | "source"
-  position: Position.Left | Position.Right
-  isConnectable: boolean,
-  label: string
-}
-
-const Port = (props: PortProps) => {
-  let className = ""
-
-  switch (props.position) {
-    case Position.Left:
-      className = styles['portLeft']
-      break;
-    case Position.Right:
-      className = styles['portRight']
-      break;
-    default:
-      break;
-  }
-  return (
-    <div className={className}>
-      <Handle
-        id={props.id}
-        type={props.ptype}
-        position={props.position}
-        isConnectable={props.isConnectable}
-      />
-      <div className={styles['portLabel']}>{props.label}</div>
-    </div>
-  );
-}
-
 const registerNodeInterface = (nodeInterface: NodeInterface) => {
   const registeredNodeInterface = window.customElements.get(nodeInterface.tag)
   if (!registeredNodeInterface) {
@@ -53,7 +20,7 @@ const registerNodeInterface = (nodeInterface: NodeInterface) => {
   }
 }
 
-const Node = memo<NodeProps>(({ data, isConnectable }) => {
+export const Node = memo<NodeProps>(({ data, isConnectable }) => {
 
   const [nodeInterface, updateNodeInterface] = useState<DOMElement<any, any>>(createElement("span"));
 
@@ -77,9 +44,8 @@ const Node = memo<NodeProps>(({ data, isConnectable }) => {
         <div className={styles['portWrapper']}>
           {data.nodeImplementation.inputs?.map(port => (
             <Port
-              key={port.name}
-              id={port.name}
-              label={port.name}
+              key={port.id}
+              label={port.label || port.id}
               ptype="target"
               position={Position.Left}
               isConnectable
@@ -93,9 +59,8 @@ const Node = memo<NodeProps>(({ data, isConnectable }) => {
         <div className={styles['portWrapper']}>
           {data.nodeImplementation.outputs?.map(port => (
             <Port
-              key={port.name}
-              id={port.name}
-              label={port.name}
+              key={port.id}
+              label={port.label || port.id}
               ptype="source"
               position={Position.Right}
               isConnectable

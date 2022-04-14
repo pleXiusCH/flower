@@ -1,4 +1,4 @@
-import { NodeImplBuilder } from "@flower/interfaces"
+import { NodeImplBuilder } from '@flower/interfaces';
 
 export class EmitNumberCustomElement extends HTMLElement {
   number = 0;
@@ -6,7 +6,7 @@ export class EmitNumberCustomElement extends HTMLElement {
 
   constructor() {
     super();
-    this.numberInput.setAttribute("type", "number");
+    this.numberInput.setAttribute('type', 'number');
     this.number = parseFloat(this.getAttribute('number') || '0');
     this.numberInput.value = this.number.toString();
   }
@@ -16,18 +16,20 @@ export class EmitNumberCustomElement extends HTMLElement {
   }
 
   initShadowDom() {
-    const shadowRoot = this.attachShadow({ mode: "open" });
+    const shadowRoot = this.attachShadow({ mode: 'open' });
     shadowRoot.appendChild(this.numberInput);
   }
 }
 
-export const EmitNumberImplBuilder: NodeImplBuilder<number> = (defaultState = 0) => ({
+export const EmitNumberImplBuilder: NodeImplBuilder<number> = (
+  defaultState = 0
+) => ({
   name: 'EmitNumber',
   internalState: defaultState,
-  activation: (internalState) => ([['num', internalState]]),
+  activation: (internalState) => [['num', internalState]],
   interface: {
     tag: 'edit-number-interface',
-    customElement: EmitNumberCustomElement
+    customElement: EmitNumberCustomElement,
   },
-  outputs: [{ name: 'num', type: 'number' }]
-})
+  outputs: [{ id: 'num', dataType: 'number', label: 'Number' }],
+});

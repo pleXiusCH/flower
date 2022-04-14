@@ -1,0 +1,29 @@
+.port {
+    display: flex;
+    align-items: center;
+
+    /* for portHandle */
+    & > * {
+        left: 0 !important;
+        right: 0 !important;
+        position: relative !important;
+        transform: translateY(0) !important;
+        margin: 2px;
+    }
+}
+
+.portLabel {
+
+}
+
+.portLeft {
+    @extend .port;
+    direction: ltr;
+    transform: translateX(-6px);
+}
+
+.portRight {
+    @extend .port;
+    direction: rtl;
+    transform: translateX(6px);
+}

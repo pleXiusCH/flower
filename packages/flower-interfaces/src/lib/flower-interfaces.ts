@@ -9,8 +9,9 @@ export type NodeActivationFn<I = LabeledDataMapping, O = LabeledDataMapping, S =
 export type SideEffectFn<I = LabeledDataMapping, S = InternalNodeStateContainer> = (internalState: S, inputs: I) => Promise<S>
 
 export type PortDefinition = {
-  name: string,
-  type: string
+  id: string,
+  dataType: string,
+  label?: string,
 }
 
 export type NodePortDefinition = {

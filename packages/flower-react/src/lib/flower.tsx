@@ -87,7 +87,7 @@ const initialNodes: Node[] = [
       nodeImplementation: AdditionImplBuilder()
     },
     type: 'flowerNode',
-    position: { x: 300, y: 0 },
+    position: { x: 320, y: 0 },
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
   },
