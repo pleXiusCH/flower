@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import FlowerReact from './flower-react';
+import Node from './Node';
 
-describe('FlowerReact', () => {
+describe('Node', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<FlowerReact />);
+    const { baseElement } = render(<Node data={undefined} isConnectable={false} />);
     expect(baseElement).toBeTruthy();
   });
 });

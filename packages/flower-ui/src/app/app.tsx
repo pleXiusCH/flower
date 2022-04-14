@@ -1,13 +1,12 @@
 import styles from './app.module.scss';
-import { Route, Link } from 'react-router-dom';
-import { FlowerReact } from '@flower/react';
+import { Flower } from '@flower/react';
 
-import { initialElements } from './initialData';
+import { AddAndLogGD, AddAndLogNodeImpls } from '@flower/node-impls';
 
 export function App() {
   return (
     <div className={styles.app}>
-      <FlowerReact initialElements={initialElements} />
+      <Flower nodeImpls={AddAndLogNodeImpls} graphDefinition={AddAndLogGD} />
     </div>
   );
 }

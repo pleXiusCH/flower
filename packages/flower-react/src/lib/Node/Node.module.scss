@@ -1,0 +1,59 @@
+.container {
+    position: relative;
+    background: #fff;
+    border: 1px solid #1a192b;
+    border-radius: 3px;
+    color: #222;
+    font-size: 10px;
+    text-align: center;
+    width: auto;
+}
+
+.header {
+    font-size: 12px;
+    padding: 2px 10px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.interface {
+
+}
+
+.portWrapper {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.port {
+    display: flex;
+    align-items: center;
+
+    /* for portHandle */
+    & > * {
+        left: 0 !important;
+        right: 0 !important;
+        position: relative !important;
+        transform: translateY(0) !important;
+        margin: 2px;
+    }
+}
+
+.portLabel {
+
+}
+
+.portLeft {
+    @extend .port;
+    direction: ltr;
+    transform: translateX(-6px);
+}
+
+.portRight {
+    @extend .port;
+    direction: rtl;
+    transform: translateX(6px);
+}

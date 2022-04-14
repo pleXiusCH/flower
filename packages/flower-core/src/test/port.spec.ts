@@ -4,7 +4,7 @@
 
 import * as O from 'fp-ts/Option';
 import { pipe } from 'fp-ts/function';
-import * as port from './port';
+import * as port from '../lib/port';
 import { deepStrictEqual } from 'assert';
 
 describe('index', () => {
@@ -45,7 +45,7 @@ describe('index', () => {
         deepStrictEqual(
           pipe(
             port.empty<number>(),
-            port.addIncoming(port.empty<number>())
+            // port.addIncoming(port.empty<number>())
           ),
           {
             data: O.none,

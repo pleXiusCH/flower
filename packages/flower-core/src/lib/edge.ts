@@ -62,3 +62,4 @@ export const empty =
 const unsafeMkEdge = 
   <FromId, ToId>(edgeData: Omit<Edge<FromId, ToId>, '_brand'>): Edge<FromId, ToId> => 
     edgeData as Edge<FromId, ToId>
+

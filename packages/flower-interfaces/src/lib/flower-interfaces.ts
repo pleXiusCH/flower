@@ -29,6 +29,11 @@ export type NodeDefinition<T = InternalNodeStateContainer> = {
   state?: T
 }
 
+export type NodeInterface<T = CustomElementConstructor> = {
+  tag: string,
+  customElement: T
+}
+
 export type NodeImplementation<S = InternalNodeStateContainer> = {
   name: string
   activation?: NodeActivationFn
@@ -36,6 +41,7 @@ export type NodeImplementation<S = InternalNodeStateContainer> = {
   internalState?: S,
   inputs?: PortDefinition[]
   outputs?: PortDefinition[]
+  interface?: NodeInterface,
 }
 
 export type NodeImplBuilder<S = InternalNodeStateContainer> = (state?: S) => NodeImplementation<S>

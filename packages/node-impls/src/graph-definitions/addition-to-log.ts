@@ -1,15 +1,15 @@
 import { GraphDefinition } from "@flower/interfaces"
-import { AdditonImplBuilder } from "../lib/addition"
+import { AdditionImplBuilder } from "../lib/addition"
 import { EmitNumberImplBuilder } from "../lib/emit-number"
 import { LogImplBuilder } from "../lib/log"
 
-export const gdAddAndLogNodeImpls = [
+export const AddAndLogNodeImpls = [
   EmitNumberImplBuilder,
-  AdditonImplBulder,
+  AdditionImplBuilder,
   LogImplBuilder
 ]
 
-export const gdAddAndLog: GraphDefinition = {
+export const AddAndLogGD: GraphDefinition = {
   name: 'sampleFlowerGraph',
   nodes: [
     { name: 'emit_a', impl: 'EmitNumber', state: 1 },
