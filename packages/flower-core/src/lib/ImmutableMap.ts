@@ -1,10 +1,10 @@
-/** @since 0.3.0 */
-
 import { Option } from 'fp-ts/Option';
 import * as O from 'fp-ts/Option';
+
 import { Encoder } from 'io-ts/Encoder';
-import { Map } from 'immutable';
 import { pipe } from 'fp-ts/function';
+
+import { Map } from 'immutable';
 
 export const upsertAt =
   <K>(E: Encoder<string, K>) =>

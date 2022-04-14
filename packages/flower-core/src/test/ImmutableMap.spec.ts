@@ -2,7 +2,7 @@ import { Map } from 'immutable';
 import { pipe } from 'fp-ts/function';
 import * as O from 'fp-ts/Option';
 import * as C from 'io-ts/Codec';
-import * as IM from './ImmutableMap';
+import * as IM from '../lib/ImmutableMap';
 
 describe('ImmutableMap', () => {
   describe('upsertAt', () => {

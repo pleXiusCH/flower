@@ -36,7 +36,6 @@ export const Node = memo<NodeProps>(({ data, isConnectable }) => {
     }, 2000);
   }, [])
 
-  console.log("Node data:", data);
   const nodeImpl = data.nodeImplementation;
   return (
     <div className={styles['container']}>

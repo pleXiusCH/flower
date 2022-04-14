@@ -1,6 +1,6 @@
 import { FlowerExecutionContext, FlowerScheduler } from '@flower/interfaces';
-import { EmitNumberImplBuilder, gdAddAndLog } from '@flower/node-impls'
-import { addGraphDefinition, addNodeImplementation, addScheduler, buildExecutionContext, createFlowerSession } from './flower-core'
+import { EmitNumberImplBuilder, AddAndLogGD } from '@flower/node-impls'
+import { addGraphDefinition, addNodeImplementation, addScheduler, buildExecutionContext, createFlowerSession } from '../lib/flower-core'
 
 describe('flower-core', () =>  {
 
@@ -20,7 +20,7 @@ describe('flower-core', () =>  {
 
   it('Should load valid graph definition to env', () => {
     const flower = createFlowerSession()
-    const newFlower = addGraphDefinition(flower)(gdAddAndLog)
+    const newFlower = addGraphDefinition(flower)(AddAndLogGD)
     // expect(newFlower.graphDefinitions.length).toEqual(1)
     console.log("addGraphDefinition", newFlower)
   })
@@ -45,7 +45,7 @@ describe('flower-core', () =>  {
       }
     }
     const flower = addScheduler(createFlowerSession())(scheduler)
-    const newFlower = buildExecutionContext(flower)(gdAddAndLog)
+    const newFlower = buildExecutionContext(flower)(AddAndLogGD)
     console.log("buildExecutionContext", newFlower)
   })
 

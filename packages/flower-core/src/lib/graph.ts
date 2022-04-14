@@ -8,37 +8,38 @@ import { Encoder } from 'io-ts/Encoder';
 import { Map, Set } from 'immutable';
 
 import * as IM from './ImmutableMap';
-import { Node } from './node';
-import { Edge } from './edge';
+// import { Node } from './node';
+// import { Edge } from './edge';
 
 // -----------------------------------------------------------------------------
 // model
 // -----------------------------------------------------------------------------
 
-export interface Graph<Id, State, IO> {
-  readonly _brand: unique symbol
-  readonly nodes: Map<string, NodeContext<State, IO>>
-  readonly edges: Map<string, Edge<Id,Id>>
+export interface Graph<Id, Edge, Node> {
+  readonly _brand: unique symbol;
+  readonly nodes: Map<string, NodeContext<Node>>;
+  readonly edges: Map<string, Map<string, Edge>>;
 }
+
+export { Graph as default };
+
+export type Direction<T> = { from: T; to: T };
+
+type NodeContext<Node> = {
+  data: Node;
+  outgoing: Set<string>;
+  incoming: Set<string>;
+};
 
 // -----------------------------------------------------------------------------
 // constructors
 // -----------------------------------------------------------------------------
 
-export const empty = 
-  <Id, State, IO>(): Graph<Id, State, IO> =>
+export const empty = <Id, Edge, Node>(): Graph<Id, Edge, Node> =>
   unsafeMkGraph({
-    nodes: Map<string, NodeContext<State, IO>>(),
-    edges: Map<string, Edge<Id,Id>>(),
+    nodes: Map<string, NodeContext<Node>>(),
+    edges: Map<string, Map<string, Edge>>(),
   });
-
-type NodeContext<State, IO> = {
-  node: Node<State, IO>;
-  outgoingEdges: Set<string>;
-  incomingEdges: Set<string>;
-};
-
-
 
 // -----------------------------------------------------------------------------
 // combinators
@@ -46,22 +47,23 @@ type NodeContext<State, IO> = {
 
 export const insertNode =
   <Id>(E: Encoder<string, Id>) =>
-  <State, IO>(id: Id, node: Node<State, IO>) =>
-  (graph: Graph<Id, State, IO>): Graph<Id, State, IO> =>
+  <Node>(id: Id, data: Node) =>
+  <Edge>(graph: Graph<Id, Edge, Node>): Graph<Id, Edge, Node> =>
     unsafeMkGraph({
       nodes: pipe(
         graph.nodes,
-        IM.modifyAt(E)(id, (nodeContext) => ({
-          ...nodeContext,
-          node,
+        IM.modifyAt(E)(id, ({ incoming, outgoing }) => ({
+          incoming,
+          outgoing,
+          data,
         })),
         O.getOrElse(() =>
           pipe(
             graph.nodes,
             IM.upsertAt(E)(id, {
-              node,
-              incomingEdges: Set<string>(),
-              outgoingEdges: Set<string>(),
+              data,
+              incoming: Set<string>(),
+              outgoing: Set<string>(),
             })
           )
         )
@@ -71,40 +73,47 @@ export const insertNode =
 
 export const insertEdge =
   <Id>(E: Encoder<string, Id>) =>
-  (id: Id, edge: Edge<Id,Id>) =>
-  <State, IO>(graph: Graph<Id, State, IO>): O.Option<Graph<Id, State, IO>> =>
+  <Edge>(from: Id, to: Id, data: Edge) =>
+  <Node>(graph: Graph<Id, Edge, Node>): Option<Graph<Id, Edge, Node>> =>
     pipe(
       graph.nodes,
-      modifyEdgeInNodes(E)(edge),
+      modifyEdgeInNodes(E)(from, to),
       O.map((nodes) =>
         unsafeMkGraph({
           nodes,
-          edges: insertEdgeInEdges(E)(edge)(graph.edges),
+          edges: insertEdgeInEdges(E)(from, to, data)(graph.edges),
         })
       )
     );
 
+export const mapEdge =
+  <Edge1, Edge2>(fn: (edge: Edge1) => Edge2) =>
+  <Id, Node>(graph: Graph<Id, Edge1, Node>): Graph<Id, Edge2, Node> =>
     unsafeMkGraph({
       nodes: graph.nodes,
-      edges: pipe(
-        graph.edges,
-        IM.modifyAt(E)(id, (currentEdge) => ({
-          ...currentEdge,
-          ...edge
-        })),
-        O.getOrElse(() => 
-          pipe(
-            graph.edges,
-            IM.upsertAt(E)(id, edge)
-          )
-        )
-      ),
+      edges: graph.edges.map((from) => from.map(fn)),
     });
+
+export const mapNode =
+  <Node1, Node2>(fn: (node: Node1) => Node2) =>
+  <Id, Edge>(graph: Graph<Id, Edge, Node1>): Graph<Id, Edge, Node2> =>
+    unsafeMkGraph({
+      nodes: pipe(
+        graph.nodes.map(({ incoming, outgoing, data }) => ({
+          incoming,
+          outgoing,
+          data: fn(data),
+        }))
+      ),
+      edges: graph.edges,
+    });
+
+export const map = mapNode;
 
 export const modifyAtEdge =
   <Id>(E: Encoder<string, Id>) =>
   <Edge>(from: Id, to: Id, update: (e: Edge) => Edge) =>
-  <Node>(graph: Graph<Id, Edge, Node>): O.Option<Graph<Id, Edge, Node>> =>
+  <Node>(graph: Graph<Id, Edge, Node>): Option<Graph<Id, Edge, Node>> =>
     pipe(
       graph.edges,
       IM.lookup(E)(from),
@@ -117,17 +126,11 @@ export const modifyAtEdge =
       ),
       O.map((edges) => unsafeMkGraph({ nodes: graph.nodes, edges }))
     );
-  
-  /**
-   * Modifies a single node in the graph.
-   *
-   * @since 0.2.0
-   * @category Combinators
-   */
+
 export const modifyAtNode =
   <Id>(E: Encoder<string, Id>) =>
   <Node>(id: Id, update: (n: Node) => Node) =>
-  <Edge>(graph: Graph<Id, Edge, Node>): O.Option<Graph<Id, Edge, Node>> =>
+  <Edge>(graph: Graph<Id, Edge, Node>): Option<Graph<Id, Edge, Node>> =>
     pipe(
       graph.nodes,
       IM.modifyAt(E)(id, ({ incoming, outgoing, data }) => ({
@@ -145,20 +148,18 @@ export const modifyAtNode =
 export const lookupNode =
   <Id>(E: Encoder<string, Id>) =>
   (id: Id) =>
-  <Id, State, IO>(graph: Graph<Id, State, IO>): O.Option<Node<State, IO>> =>
+  <Node>(graph: Graph<Id, unknown, Node>): Option<Node> =>
     pipe(
       graph.nodes,
-      IM.lookup(E)(id)
+      IM.lookup(E)(id),
+      O.map((node) => node.data)
     );
 
 export const lookupEdge =
   <Id>(E: Encoder<string, Id>) =>
-  (id: Id) =>
-  <Id, State, IO>(graph: Graph<Id, State, IO>): O.Option<Edge<Id,Id>> =>
-    pipe(
-      graph.edges,
-      IM.lookup(E)(id)
-    );
+  (from: Id, to: Id) =>
+  <Edge>(graph: Graph<Id, Edge, unknown>): Option<Edge> =>
+    pipe(graph.edges, IM.lookup(E)(from), O.chain(IM.lookup(E)(to)));
 
 // -----------------------------------------------------------------------------
 // destructors
@@ -166,36 +167,49 @@ export const lookupEdge =
 
 export const nodeEntries =
   <Id>(D: Decoder<string, Id>) =>
-  <State, IO>(graph: Graph<Id, State, IO>): [Id, Node<State, IO>][] => 
+  <Edge, Node>(graph: Graph<Id, Edge, Node>): [Id, Node][] =>
     pipe(
-      graph.nodes,
+      graph.nodes.map((_) => _.data),
       mapEntries<Id>(D)
-    )
+    );
 
 export const edgeEntries =
   <Id>(D: Decoder<string, Id>) =>
-  <State, IO>(graph: Graph<Id, State, IO>): [Id, Edge<Id,Id>][] =>
+  <Edge, Node>(graph: Graph<Id, Edge, Node>): [Direction<Id>, Edge][] =>
     pipe(
-      graph.edges,
-      mapEntries<Id>(D)
-    )
+      graph.edges.toArray(),
+      A.chain(([encodedFrom, toMap]) =>
+        pipe(
+          encodedFrom,
+          D.decode,
+          E.map((from) =>
+            pipe(
+              toMap,
+              mapEntries(D),
+              A.map(([to, edge]) => <[Direction<Id>, Edge]>[{ from, to }, edge])
+            )
+          ),
+          E.getOrElse(() => <[Direction<Id>, Edge][]>[])
+        )
+      )
+    );
 
 export const entries =
   <Id>(C: Codec<string, string, Id>) =>
-  <State, IO>(graph: Graph<Id, State, IO>): { nodes: [Id, Node<State, IO>][]; edges: [Id, Edge<Id,Id>][] } => 
-    ({
-      nodes: nodeEntries(C)(graph),
-      edges: edgeEntries(C)(graph),
-    });
-
+  <Edge, Node>(
+    graph: Graph<Id, Edge, Node>
+  ): { nodes: [Id, Node][]; edges: [Direction<Id>, Edge][] } => ({
+    nodes: nodeEntries(C)(graph),
+    edges: edgeEntries(C)(graph),
+  });
 
 // -----------------------------------------------------------------------------
 // internal
 // -----------------------------------------------------------------------------
 
-const unsafeMkGraph = 
-  <Id, State, IO>(graphData: Omit<Graph<Id, State, IO>, '_brand'>): Graph<Id, State, IO> => 
-    graphData as Graph<Id, State, IO>
+const unsafeMkGraph = <Id, Edge, Node>(
+  graphData: Omit<Graph<Id, Edge, Node>, '_brand'>
+): Graph<Id, Edge, Node> => graphData as Graph<Id, Edge, Node>;
 
 const mapEntries =
   <Id>(decoder: Decoder<string, Id>) =>
@@ -210,7 +224,7 @@ const mapEntries =
         )
       ),
       E.getOrElse(() => <[Id, V][]>[])
-    )
+    );
 
 const insertIncoming =
   <Id>(E: Encoder<string, Id>) =>
@@ -254,4 +268,43 @@ const insertEdgeInEdges =
       O.getOrElse(() => Map<string, Edge>()),
       IM.upsertAt(E)(to, data),
       (toMap) => IM.upsertAt(E)(from, toMap)(edges)
+    );
+
+// -----------------------------------------------------------------------------
+// debug
+// -----------------------------------------------------------------------------
+
+/**
+ * For debugging purpose we provide a simple and dependency free dot file
+ * generator as its sort of the standard CLI tool to layout graphs visually. See
+ * [graphviz](https://graphviz.org) for more details.
+ *
+ * If your your edges and nodes are not of type string, you can use `mapEdge`
+ * and `mapNode` to convert them. That's not possible with the id, as it would
+ * possible change the structure of the graph, thus you need to provide a
+ * function that stringifies the ids.
+ *
+ * @since 0.1.0
+ * @category Debug
+ */
+export const toDotFile =
+  <Id>(D: Decoder<string, Id>) =>
+  (printId: (id: Id) => string) =>
+  (graph: Graph<Id, string, string>): string =>
+    pipe(
+      [
+        ...pipe(
+          nodeEntries(D)(graph),
+          A.map(([id, label]) => `"${printId(id)}" [label="${label}"]`)
+        ),
+        ...pipe(
+          edgeEntries(D)(graph),
+          A.map(
+            ([{ from, to }, label]) =>
+              `"${printId(from)}" -> "${printId(to)}" [label="${label}"]`
+          )
+        ),
+      ],
+      (_) => ['digraph {', ..._, '}'],
+      (_) => _.join('\n')
     );

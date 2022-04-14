@@ -1,6 +1,6 @@
 import './flower.module.scss';
 
-import { MouseEvent as ReactMouseEvent, CSSProperties } from 'react';
+import { MouseEvent as ReactMouseEvent, CSSProperties, useEffect } from 'react';
 
 import ReactFlow, {
   addEdge,
@@ -180,6 +180,10 @@ export interface FlowerProps {
 }
 
 export function Flower(props: FlowerProps) {
+
+  useEffect(() => console.log("Graph-Definition changed:", props.graphDefinition), [props.graphDefinition])
+  useEffect(() => console.log("Node-Implementations changed:", props.nodeImpls), [props.nodeImpls])
+
   return (
     <OverviewFlow />
   )
