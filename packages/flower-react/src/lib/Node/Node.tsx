@@ -1,6 +1,6 @@
 import styles from './Node.module.scss';
 
-import { createElement, DOMElement, memo, ReactElement, useEffect, useState } from 'react';
+import { createElement, memo, useEffect, useState } from 'react';
 import { Position } from 'react-flow-renderer';
 import { NodeImplementation, NodeInterface } from '@flower/interfaces';
 import { renderPorts } from '../Port/Port';
@@ -21,9 +21,8 @@ const registerNodeInterface = (nodeInterface: NodeInterface) => {
 }
 
 export const Node = memo<NodeProps>(({ data, isConnectable }) => {
-
   const [nodeInterfaceTag, setNodeInterfaceTag] = useState("span");
-  const [name, setName] = useState("Peter");
+  const [testInterfaceData, setTestInterfaceData] = useState("TEST");
 
   useEffect(() => {
     console.log("Node Interface init: ", data.nodeImplementation.interface);
@@ -32,10 +31,9 @@ export const Node = memo<NodeProps>(({ data, isConnectable }) => {
       setNodeInterfaceTag(data.nodeImplementation.interface.tag);
     }
 
-    setTimeout(() => {
-      console.log("Setting name to Parker");
-      setName("Parker");
-    }, 5000);
+    setInterval(() => {
+      setTestInterfaceData("Entry on " + Date.now() + " - foo bar bazzz / test-entry!");
+    }, 2000);
   }, [])
 
   console.log("Node data:", data);
@@ -55,7 +53,7 @@ export const Node = memo<NodeProps>(({ data, isConnectable }) => {
           })))}
         </div>
         <div className={styles['interface']}>
-          {createElement(nodeInterfaceTag, { name })}
+          {createElement(nodeInterfaceTag, { input: testInterfaceData })}
         </div>
         <div className={styles['portWrapper']}>
           {nodeImpl.outputs && renderPorts(nodeImpl.outputs.map(portDefinition => ({

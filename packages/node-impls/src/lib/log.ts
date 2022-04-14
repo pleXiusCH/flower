@@ -1,17 +1,75 @@
 import { NodeImplBuilder } from '@flower/interfaces';
-import { html, css, LitElement, PropertyDeclarations } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import {
+  html,
+  css,
+  LitElement,
+  PropertyDeclarations,
+  PropertyValues,
+} from 'lit';
 
-@customElement('simple-greeting-interface')
-export class SimpleGreetingInterface extends LitElement {
-  static styles = css`p { color: blue }`;
-
+export class LogExplorer extends LitElement {
+  static styles = css`
+    .container {
+      width: 180px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      font-size: 8px;
+      border: 1px solid black;
+      border-radius: 3px;
+      height: 150px;
+      overflow: auto;
+      white-space: nowrap;
+      padding: 2px;
+    }
+    .log-entry {
+      color: rgb(42, 42, 151);
+      margin-bottom: 1px;
+      border-bottom: 1px solid rgb(211, 211, 209);
+    }
+  `;
   static properties: PropertyDeclarations = {
-    name: { type: String },
+    input: {
+      type: String,
+    },
   };
+  private logs: Array<{ time: Date; text: string }> = [];
+
+  createLogEntry(text: string) {
+    return {
+      time: new Date(Date.now()),
+      text,
+    };
+  }
+
+  addLogEntry(text: string | null) {
+    if (!text) return;
+    const logEntry = this.createLogEntry(text);
+    this.logs.push(logEntry);
+    this.requestUpdate();
+    return logEntry;
+  }
+
+  updated(changed: PropertyValues) {
+    if (
+      changed.has('input') &&
+      typeof this.getAttribute('input') === 'string'
+    ) {
+      this.addLogEntry(this.getAttribute('input'));
+    }
+  }
 
   render() {
-    return html`<p>Hello, ${this.getAttribute("name")}!</p>`;
+    return html`
+      <div class="container">
+        ${this.logs.map(
+          (log) =>
+            html`<div class="log-entry">
+              [${log.time.toLocaleTimeString()}]: ${log.text}
+            </div>`
+        )}
+      </div>
+    `;
   }
 }
 
@@ -20,6 +78,6 @@ export const LogImplBuilder: NodeImplBuilder = () => ({
   inputs: [{ id: 'in', dataType: 'string | number | object' }],
   interface: {
     tag: 'simple-greeting-interface',
-    customElement: SimpleGreetingInterface,
-  }
+    customElement: LogExplorer,
+  },
 });
