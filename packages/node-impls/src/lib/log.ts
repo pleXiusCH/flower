@@ -77,7 +77,7 @@ export const LogImplBuilder: NodeImplBuilder = () => ({
   name: 'Log',
   inputs: [{ id: 'in', dataType: 'string | number | object' }],
   interface: {
-    tag: 'simple-greeting-interface',
+    tag: 'log-explorer-interface',
     customElement: LogExplorer,
   },
 });

@@ -1,23 +1,24 @@
 import { NodeImplBuilder } from '@flower/interfaces';
+import {
+  html,
+  css,
+  LitElement,
+  PropertyDeclarations,
+} from 'lit';
 
-export class EmitNumberCustomElement extends HTMLElement {
-  number = 0;
-  numberInput = document.createElement('input');
+export class EmitNumberInterface extends LitElement {
+  static styles = css``;
 
-  constructor() {
-    super();
-    this.numberInput.setAttribute('type', 'number');
-    this.number = parseFloat(this.getAttribute('number') || '0');
-    this.numberInput.value = this.number.toString();
-  }
+  static properties: PropertyDeclarations = {
+    nodeState: {
+      type: Number,
+    },
+  };
 
-  connectedCallback() {
-    this.initShadowDom();
-  }
-
-  initShadowDom() {
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-    shadowRoot.appendChild(this.numberInput);
+  render() {
+    return html`
+      <input type="number" value="${this.getAttribute("nodeState")}" />
+    `;
   }
 }
 
@@ -29,7 +30,7 @@ export const EmitNumberImplBuilder: NodeImplBuilder<number> = (
   activation: (internalState) => [['num', internalState]],
   interface: {
     tag: 'edit-number-interface',
-    customElement: EmitNumberCustomElement,
+    customElement: EmitNumberInterface,
   },
   outputs: [{ id: 'num', dataType: 'number', label: 'Number' }],
 });
