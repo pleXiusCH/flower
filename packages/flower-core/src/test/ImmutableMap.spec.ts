@@ -1,7 +1,6 @@
 import { Map } from 'immutable';
 import { pipe } from 'fp-ts/function';
 import * as O from 'fp-ts/Option';
-import * as C from 'io-ts/Codec';
 import * as IM from '../lib/ImmutableMap';
 
 describe('ImmutableMap', () => {
@@ -10,8 +9,8 @@ describe('ImmutableMap', () => {
       expect(
         pipe(
           Map<string, string>(),
-          IM.upsertAt(C.string)('hello', 'world'),
-          IM.upsertAt(C.string)('foo', 'bar')
+          IM.upsertAt('hello', 'world'),
+          IM.upsertAt('foo', 'bar')
         )
       ).toStrictEqual(
         Map(<[string, string][]>[
@@ -27,9 +26,9 @@ describe('ImmutableMap', () => {
       expect(
         pipe(
           Map<string, string>(),
-          IM.upsertAt(C.string)('hello', 'world'),
-          IM.upsertAt(C.string)('foo', 'bar'),
-          IM.modifyAt(C.string)('hello', () => 'yellow')
+          IM.upsertAt('hello', 'world'),
+          IM.upsertAt('foo', 'bar'),
+          IM.modifyAt('hello', () => 'yellow')
         )
       ).toStrictEqual(
         O.some(
@@ -45,9 +44,9 @@ describe('ImmutableMap', () => {
       expect(
         pipe(
           Map<string, string>(),
-          IM.upsertAt(C.string)('hello', 'world'),
-          IM.upsertAt(C.string)('foo', 'bar'),
-          IM.modifyAt(C.string)('world', () => 'hello')
+          IM.upsertAt('hello', 'world'),
+          IM.upsertAt('foo', 'bar'),
+          IM.modifyAt('world', () => 'hello')
         )
       ).toStrictEqual(O.none);
     });
@@ -58,9 +57,9 @@ describe('ImmutableMap', () => {
       expect(
         pipe(
           Map<string, string>(),
-          IM.upsertAt(C.string)('hello', 'world'),
-          IM.upsertAt(C.string)('foo', 'bar'),
-          IM.lookup(C.string)('foo')
+          IM.upsertAt('hello', 'world'),
+          IM.upsertAt('foo', 'bar'),
+          IM.lookup('foo')
         )
       ).toStrictEqual(O.some('bar'));
     });
@@ -69,9 +68,9 @@ describe('ImmutableMap', () => {
       expect(
         pipe(
           Map<string, string>(),
-          IM.upsertAt(C.string)('hello', 'world'),
-          IM.upsertAt(C.string)('foo', 'bar'),
-          IM.lookup(C.string)('bar')
+          IM.upsertAt('hello', 'world'),
+          IM.upsertAt('foo', 'bar'),
+          IM.lookup('bar')
         )
       ).toStrictEqual(O.none);
     });
