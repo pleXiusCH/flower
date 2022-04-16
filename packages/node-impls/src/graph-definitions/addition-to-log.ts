@@ -12,10 +12,10 @@ export const AddAndLogNodeImpls = [
 export const AddAndLogGD: GraphDefinition = {
   name: 'sampleFlowerGraph',
   nodes: [
-    { name: 'emit_a', impl: 'EmitNumber', state: 1 },
-    { name: 'emit_b', impl: 'EmitNumber', state: 2 },
-    { name: 'add', impl: 'Addition' },
-    { name: 'tap', impl: 'Log' }
+    { id: 'emit_a', impl: 'EmitNumber', state: 1 },
+    { id: 'emit_b', impl: 'EmitNumber', state: 2 },
+    { id: 'add', impl: 'Addition' },
+    { id: 'tap', impl: 'Log' }
   ],
   edges: [
     { from: { node: 'emit_a', port: 'num' }, to: { node: 'add', port: 'a' }},

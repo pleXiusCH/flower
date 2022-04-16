@@ -25,7 +25,7 @@ export type EdgeDefinition = {
 }
 
 export type NodeDefinition<T = InternalNodeStateContainer> = {
-  name: string,
+  id: string,
   impl: string,
   state?: T
 }
@@ -38,7 +38,6 @@ export type NodeInterface<T = CustomElementConstructor> = {
 export type NodeImplementation<S = InternalNodeStateContainer> = {
   name: string
   activation?: NodeActivationFn
-  sideEffect?: SideEffectFn
   internalState?: S,
   inputs?: PortDefinition[]
   outputs?: PortDefinition[]
