@@ -1,8 +1,8 @@
-import { FlowerExecutionContext, FlowerScheduler, FlowerWorker, GraphDefinition, NodeImplementation } from "@flower/interfaces"
+import { EdgeDefinition, FlowerExecutionContext, FlowerScheduler, FlowerWorker, GraphDefinition, NodeDefinition, NodeImplementation } from "@flower/interfaces"
 
-export const createNode = (nodeDefinition) => ({...nodeDefinition})
-export const createEdge = (edgeDefinition) => ({...edgeDefinition})
-export const createGraph = (graphDefinition) => ({...graphDefinition})
+export const createNode = (nodeDefinition: NodeDefinition) => ({...nodeDefinition})
+export const createEdge = (edgeDefinition: EdgeDefinition) => ({...edgeDefinition})
+export const createGraph = (graphDefinition: GraphDefinition) => ({...graphDefinition})
 
 export type FlowerSession = {
   nodeInplementations: NodeImplementation[],

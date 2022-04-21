@@ -1,6 +1,5 @@
 
 import * as O from 'fp-ts/Option';
-import { Stack } from 'immutable';
 
 // -----------------------------------------------------------------------------
 // model
@@ -11,30 +10,30 @@ export type OriginIdentifier<Id> = {
   id: Id
 }
 
-export type Connection<FromId, ToId> = {
-  from: OriginIdentifier<FromId> | Stack<OriginIdentifier<FromId>>
-  to: OriginIdentifier<ToId> | Stack<OriginIdentifier<ToId>>
+export type Connection = {
+  from: string
+  to: string
 }
 
-export interface Edge<FromId, ToId> {
+export interface Edge {
   readonly _brand: unique symbol
-  readonly connection: O.Option<Connection<FromId, ToId>>
+  readonly from: string,
+  readonly to: string,
 }
 
 export {
   Edge as default,
 };
 
-
-
 // -----------------------------------------------------------------------------
 // constructors
 // -----------------------------------------------------------------------------
 
 export const empty = 
-  <FromId, ToId>(): Edge<FromId, ToId> =>
+  (): Edge =>
     unsafeMkEdge({
-      connection: O.none
+      from: '',
+      to: ''
     });
 
 // -----------------------------------------------------------------------------
@@ -60,6 +59,6 @@ export const empty =
 // -----------------------------------------------------------------------------
 
 const unsafeMkEdge = 
-  <FromId, ToId>(edgeData: Omit<Edge<FromId, ToId>, '_brand'>): Edge<FromId, ToId> => 
-    edgeData as Edge<FromId, ToId>
+  (edgeData: Omit<Edge, '_brand'>): Edge => 
+    edgeData as Edge
 

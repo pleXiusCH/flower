@@ -3,11 +3,11 @@ import { AdditionImplBuilder } from "../lib/addition"
 import { EmitNumberImplBuilder } from "../lib/emit-number"
 import { LogImplBuilder } from "../lib/log"
 
-export const AddAndLogNodeImpls = [
+export const AddAndLogNodeImpls = {
   EmitNumberImplBuilder,
   AdditionImplBuilder,
   LogImplBuilder
-]
+}
 
 export const AddAndLogGD: GraphDefinition = {
   name: 'sampleFlowerGraph',
@@ -18,8 +18,8 @@ export const AddAndLogGD: GraphDefinition = {
     { id: 'tap', impl: 'Log' }
   ],
   edges: [
-    { from: { node: 'emit_a', port: 'num' }, to: { node: 'add', port: 'a' }},
-    { from: { node: 'emit_b', port: 'num' }, to: { node: 'add', port: 'b' }},
-    { from: { node: 'add', port: 'c' }, to: { node: 'tap', port: 'in' }}
+    { from: { nodeId: 'emit_a', portId: 'num' }, to: { nodeId: 'add', portId: 'a' }},
+    { from: { nodeId: 'emit_b', portId: 'num' }, to: { nodeId: 'add', portId: 'b' }},
+    { from: { nodeId: 'add', portId: 'c' }, to: { nodeId: 'tap', portId: 'in' }}
   ],
 }

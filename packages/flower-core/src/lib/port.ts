@@ -9,11 +9,9 @@ import * as IM from './ImmutableMap'
 // model
 // -------------------------------------------------------------------------------------
 
-export interface Port<T> {
+export interface Port<T = unknown> {
   readonly _brand: unique symbol
   readonly data: Option<T>
-  readonly incoming: Option<Set<Port<T>>>
-  readonly outgoing: Option<Set<Port<T>>>
 }
 
 // -----------------------------------------------------------------------------
@@ -23,8 +21,6 @@ export interface Port<T> {
 export const empty = <T>(): Port<T> =>
   unsafeMkPort({
     data: O.none,
-    incoming: O.none,
-    outgoing: O.none
   });
 
 // -------------------------------------------------------------------------------------

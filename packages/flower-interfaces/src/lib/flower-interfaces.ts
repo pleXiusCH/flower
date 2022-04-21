@@ -14,19 +14,19 @@ export type PortDefinition = {
   label?: string,
 }
 
-export type NodePortDefinition = {
-  node: string
-  port: string
+export type ConnectionDefinition = {
+  nodeId: string
+  portId?: string
 }
 
 export type EdgeDefinition = {
-  from: NodePortDefinition,
-  to: NodePortDefinition
+  from: ConnectionDefinition,
+  to: ConnectionDefinition
 }
 
 export type NodeDefinition<T = InternalNodeStateContainer> = {
   id: string,
-  impl: string,
+  impl?: string,
   state?: T
 }
 

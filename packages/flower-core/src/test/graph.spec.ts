@@ -3,23 +3,16 @@ import { deepStrictEqual } from 'assert';
 import * as fp from 'fp-ts';
 import * as Codec from 'io-ts/Codec';
 
-const node1 = { id: 'n1', impl: 'null' };
-const node2 = { id: 'n2', impl: 'null' };
-const node3 = { id: 'n3', impl: 'null' };
-const node4 = { id: 'n4', impl: 'null' };
-const node5 = { id: 'n5', impl: 'null' };
-const edge1 = {
-  from: { node: 'n1', port: 'null' },
-  to: { node: 'n2', port: 'null' },
-};
-const edge2 = {
-  from: { node: 'n1', port: 'null' },
-  to: { node: 'n2', port: 'null' },
-};
-const edge3 = {
-  from: { node: 'n1', port: 'null' },
-  to: { node: 'n2', port: 'null' },
-};
+import { SimpleGraph } from './data/testGraphs'; 
+
+const node1 = SimpleGraph.node1
+const node2 = SimpleGraph.node2
+const node3 = SimpleGraph.node3
+const node4 = SimpleGraph.node4
+const node5 = SimpleGraph.node5
+const edge1 = SimpleGraph.edge1;
+const edge2 = SimpleGraph.edge2;
+const edge3 = SimpleGraph.edge3;
 
 describe('index', () => {
   describe('Constructors', () => {
@@ -88,8 +81,8 @@ describe('index', () => {
             graph.insertNode(node1),
             graph.insertNode(node2),
             fp.option.of,
-            fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-            fp.option.chain(graph.modifyAtEdge('n1', 'n2', (e) => edge2)),
+            fp.option.chain(graph.insertEdge(edge1)),
+            fp.option.chain(graph.modifyAtEdge(edge1, (e) => edge2)),
             fp.option.map(graph.edgeEntries)
           ),
           fp.option.some([[{ from: 'n1', to: 'n2' }, edge2]])
@@ -103,8 +96,8 @@ describe('index', () => {
             graph.insertNode(node1),
             graph.insertNode(node2),
             fp.option.of,
-            fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-            fp.option.chain(graph.modifyAtEdge('n2', 'n1', (e) => edge2)),
+            fp.option.chain(graph.insertEdge(edge1)),
+            fp.option.chain(graph.modifyAtEdge(edge1, (e) => edge2)),
             fp.option.map(graph.edgeEntries)
           ),
           fp.option.none
@@ -148,7 +141,7 @@ describe('index', () => {
           graph.empty(),
           graph.insertNode(node1),
           graph.insertNode(node2),
-          graph.insertEdge('n1', 'n2', edge1),
+          graph.insertEdge(edge1),
           fp.option.map(graph.entries)
         ),
         fp.option.some({
@@ -165,8 +158,8 @@ describe('index', () => {
           graph.insertNode(node1),
           graph.insertNode(node2),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-          fp.option.chain(graph.insertEdge('n2', 'n1', edge2)),
+          fp.option.chain(graph.insertEdge(edge1)),
+          fp.option.chain(graph.insertEdge(edge2)),
           fp.option.map(graph.entries)
         ),
         fp.option.some({
@@ -184,7 +177,7 @@ describe('index', () => {
         fp.function.pipe(
           graph.empty(),
           graph.insertNode(node1),
-          graph.insertEdge('n1', 'n1', edge1),
+          graph.insertEdge(edge1),
           fp.option.map(graph.entries)
         ),
         fp.option.some({
@@ -199,7 +192,7 @@ describe('index', () => {
         fp.function.pipe(
           graph.empty(),
           graph.insertNode(node1),
-          graph.insertEdge('n1', 'n2', edge1),
+          graph.insertEdge(edge1),
           fp.option.map(graph.entries)
         ),
         fp.option.none
@@ -216,13 +209,13 @@ describe('index', () => {
           graph.insertNode(node4),
           graph.insertNode(node5),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n3', 'n1', edge1)),
-          fp.option.chain(graph.insertEdge('n3', 'n2', edge2)),
-          fp.option.chain(graph.insertEdge('n4', 'n3', edge3)),
-          fp.option.chain(graph.insertEdge('n5', 'n3', edge3)),
+          fp.option.chain(graph.insertEdge(edge1)),
+          fp.option.chain(graph.insertEdge(edge2)),
+          fp.option.chain(graph.insertEdge(edge3)),
+          fp.option.chain(graph.insertEdge(edge3)),
           fp.option.chain((g) =>
             fp.function.pipe(
-              g.nodes.get(Codec.string.encode('n3'), null),
+              g.nodes.get('n3', null),
               fp.option.fromNullable
             )
           ),
@@ -249,8 +242,8 @@ describe('index', () => {
           graph.insertNode(node2),
           graph.insertNode(node3),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-          fp.option.chain(graph.insertEdge('n2', 'n3', edge2)),
+          fp.option.chain(graph.insertEdge(edge1)),
+          fp.option.chain(graph.insertEdge(edge2)),
           fp.option.map((n) => `Edge ${n}`)
         ),
         fp.option.map(graph.entries)
@@ -273,7 +266,7 @@ describe('index', () => {
           graph.insertNode(node1),
           graph.insertNode(node2),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
+          fp.option.chain(graph.insertEdge(edge1)),
           fp.option.map((n) => `Node ${n}`)
         ),
         fp.option.map(graph.entries)
@@ -293,7 +286,7 @@ describe('index', () => {
           graph.insertNode(node1),
           graph.insertNode(node2),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
+          fp.option.chain(graph.insertEdge(edge1)),
           fp.option.map(graph.nodeEntries)
         ),
         fp.option.some([['n1', node1], ['n2', node2]])
@@ -310,8 +303,8 @@ describe('index', () => {
           graph.insertNode(node2),
           graph.insertNode(node3),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-          fp.option.chain(graph.insertEdge('n2', 'n3', edge2)),
+          fp.option.chain(graph.insertEdge(edge1)),
+          fp.option.chain(graph.insertEdge(edge2)),
           fp.option.map((n) => `Node ${n}`)
         ),
         fp.option.map(graph.edgeEntries)
@@ -332,8 +325,8 @@ describe('index', () => {
           graph.insertNode(node2),
           graph.insertNode(node3),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-          fp.option.chain(graph.insertEdge('n2', 'n3', edge2)),
+          fp.option.chain(graph.insertEdge(edge1)),
+          fp.option.chain(graph.insertEdge(edge2)),
           fp.option.map(graph.entries)
         ),
         fp.option.some({
@@ -356,8 +349,8 @@ describe('index', () => {
           graph.insertNode(node2),
           graph.insertNode(node3),
           fp.option.of,
-          fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-          fp.option.chain(graph.insertEdge('n2', 'n3', edge2)),
+          fp.option.chain(graph.insertEdge(edge1)),
+          fp.option.chain(graph.insertEdge(edge2)),
           fp.option.map(graph.toDotFile(fp.function.identity))
         ),
         fp.option.some(`digraph {
@@ -381,8 +374,8 @@ describe('index', () => {
             graph.insertNode(node2),
             graph.insertNode(node3),
             fp.option.of,
-            fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-            fp.option.chain(graph.insertEdge('n2', 'n3', edge2)),
+            fp.option.chain(graph.insertEdge(edge1)),
+            fp.option.chain(graph.insertEdge(edge2)),
             fp.option.chain(graph.lookupEdge('n1', 'n2'))
           ),
           fp.option.some(edge1)
@@ -397,8 +390,8 @@ describe('index', () => {
             graph.insertNode(node2),
             graph.insertNode(node3),
             fp.option.of,
-            fp.option.chain(graph.insertEdge('n1', 'n2', edge1)),
-            fp.option.chain(graph.insertEdge('n2', 'n3', edge2)),
+            fp.option.chain(graph.insertEdge(edge1)),
+            fp.option.chain(graph.insertEdge(edge2)),
             fp.option.chain(graph.lookupEdge('n3', 'n2'))
           ),
           fp.option.none

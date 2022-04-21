@@ -1,24 +1,19 @@
-import { option, string } from 'fp-ts';
-import { pipe } from 'fp-ts/function';
-import { TaskEither } from 'fp-ts/lib/TaskEither';
 import * as O from 'fp-ts/Option';
-import * as TE from 'fp-ts/TaskEither'
 import { Option } from 'fp-ts/Option';
-import { Map, Set } from 'immutable';
-
-import * as IM from './ImmutableMap';
-import * as P from './port';
-import { addScheduler } from './flower-core';
+import { Map } from 'immutable';
+import { Port } from './port';
 
 // -----------------------------------------------------------------------------
 // model
 // -----------------------------------------------------------------------------
 
-export interface Node<S, P> {
+export interface Node<S = unknown> {
   readonly _brand: unique symbol
-  readonly ports: Option<Set<P.Port<P>>>
+  readonly id: string
+  readonly ports: Option<Map<string, Port>>
   readonly state: Option<S>
-  readonly activationFn: Option<TaskEither<string, Map<string, P>>>
+  readonly activationFn: Option<() => [string, unknown][]>
+  readonly uiInterface: Option<unknown>
 }
 
 export {
@@ -29,12 +24,13 @@ export {
 // constructors
 // -----------------------------------------------------------------------------
 
-export const empty = 
-  <S, P>(): Node<S, P> =>
+export const empty = (id: string): Node =>
     unsafeMkNode({
+      id,
       ports: O.none,
       state: O.none,
-      activationFn: O.none
+      activationFn: O.none,
+      uiInterface: O.none,
     });
 
 // -----------------------------------------------------------------------------
@@ -53,24 +49,6 @@ export const empty =
 // destructors
 // -----------------------------------------------------------------------------
 
-// const entries =
-//   <S, P>(node: Node<S, P>): {
-//     name: string,
-//     ports: Array<P.Port<P>>,
-//     state: S | never,
-//     activationFn: never
-//   } =>
-//     ({
-//       name: node.name,
-//       ports: pipe(
-//         node.ports,
-//         O.getRight()
-//       ),
-//       state: pipe(
-//         node.state,
-//         O.getOrElse(() => [])
-//       ),
-//     })
 
 
 // -----------------------------------------------------------------------------
@@ -78,5 +56,5 @@ export const empty =
 // -----------------------------------------------------------------------------
 
 const unsafeMkNode = 
-  <S, P>(nodeData: Omit<Node<S, P>, '_brand'>): Node<S, P> => 
-    nodeData as Node<S, P>;
+  <S>(nodeData: Omit<Node<S>, '_brand'>): Node<S> => 
+    nodeData as Node<S>;
