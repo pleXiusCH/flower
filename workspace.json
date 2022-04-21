@@ -152,7 +152,7 @@
             "{options.outputPath}"
           ],
           "options": {
-            "compiler": "babel", // TODO: switch to swc
+            "compiler": "babel",
             "outputPath": "dist/packages/flower-ui",
             "index": "packages/flower-ui/src/index.html",
             "main": "packages/flower-ui/src/main.tsx",

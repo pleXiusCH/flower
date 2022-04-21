@@ -1,0 +1,36 @@
+.container {
+    position: relative;
+    background: #fff;
+    border: 1px solid #1a192b;
+    border-radius: 3px;
+    color: #222;
+    font-size: 10px;
+    text-align: center;
+    width: auto;
+}
+
+.header {
+    font-size: 12px;
+    padding: 8px 8px 0 8px;
+}
+
+.thread-name {
+    color: white;
+    background-color: #3b4b68;
+    padding: 4px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.interface {
+    padding: 8px;
+}
+
+.portWrapper {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 8px 0;
+}
