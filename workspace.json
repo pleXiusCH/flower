@@ -7,7 +7,7 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/js:tsc",
+          "executor": "@nrwl/js:swc",
           "outputs": [
             "{options.outputPath}"
           ],
@@ -50,7 +50,7 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/js:tsc",
+          "executor": "@nrwl/js:swc",
           "outputs": [
             "{options.outputPath}"
           ],
@@ -152,6 +152,7 @@
             "{options.outputPath}"
           ],
           "options": {
+            "compiler": "babel", // TODO: switch to swc
             "outputPath": "dist/packages/flower-ui",
             "index": "packages/flower-ui/src/index.html",
             "main": "packages/flower-ui/src/main.tsx",
@@ -269,7 +270,7 @@
       "projectType": "library",
       "targets": {
         "build": {
-          "executor": "@nrwl/js:tsc",
+          "executor": "@nrwl/js:swc",
           "outputs": [
             "{options.outputPath}"
           ],
