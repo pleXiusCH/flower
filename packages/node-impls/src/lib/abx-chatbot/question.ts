@@ -1,5 +1,5 @@
 import { NodeImplBuilder } from '@flower/interfaces';
-import { html, css, LitElement, PropertyDeclarations } from 'lit';
+import { html, css, LitElement, PropertyDeclarations, PropertyValues } from 'lit';
 
 type NodeState = {
   text: string
@@ -11,31 +11,51 @@ type Reply = {
   goto: string
 }
 
+const _defaultState = {
+  text: 'question?',
+  replies: [
+    {
+      reply: 'answer!',
+      goto: 'complete',
+    },
+  ],
+}; 
+
 export class QuestionInterface extends LitElement {
   static styles = css``;
 
   static properties: PropertyDeclarations = {
-    nodeState: {
-      type: Object,
-    },
+    nodestate: {},
   };
 
+  private nodeState = _defaultState;
+
+  updated(changed: PropertyValues) {
+    if (
+      changed.has('nodestate') &&
+      typeof this.getAttribute('nodestate') === 'string'
+    ) {
+      this.nodeState = JSON.parse(this.getAttribute('nodestate') || "");
+      this.requestUpdate();
+    }
+  }
+
+
+
   render() {
-    console.log("THIS", this);
-    return html` <p>${this.getAttribute("nodeState")}</p> `;
+    return html` 
+      <p>${this.nodeState.text}</p>
+      <div>
+        ${this.nodeState.replies.map(entry => html`
+          <div>${entry.reply}</div>
+        `)}
+      </div>
+    `;
   }
 }
 
 export const QuestionImplBuilder: NodeImplBuilder<NodeState> = (
-  defaultState = {
-    text: 'question?',
-    replies: [
-      {
-        reply: 'answer!',
-        goto: 'complete',
-      },
-    ],
-  }
+  defaultState = _defaultState
 ) => ({
   name: 'Question',
   internalState: defaultState,

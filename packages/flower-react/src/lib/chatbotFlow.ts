@@ -10,7 +10,7 @@ export const initialNodes: Node[] = [
       nodeImplementation: ConvoImplBuilder(),
     },
     type: 'chatbotNode',
-    position: { x: 0, y: 0 },
+    position: { x: 140, y: 0 },
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
   },
@@ -48,6 +48,28 @@ export const initialNodes: Node[] = [
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
   },
+  {
+    id: '3',
+    data: {
+      threadName: 'feel_good',
+      nodeImplementation: MessageImplBuilder('Awesome!'),
+    },
+    type: 'chatbotNode',
+    position: { x: 1100, y: -75 },
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
+  },
+  {
+    id: '4',
+    data: {
+      threadName: 'feel_bad',
+      nodeImplementation: MessageImplBuilder('Oh nooo...'),
+    },
+    type: 'chatbotNode',
+    position: { x: 1100, y: 75 },
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
+  },
 ];
 
 export const initialEdges: Edge[] = [
@@ -63,6 +85,20 @@ export const initialEdges: Edge[] = [
     source: '1',
     sourceHandle: 'action',
     target: '2',
+    targetHandle: 'convo',
+  },
+  {
+    id: 'e3',
+    source: '2',
+    sourceHandle: 'action',
+    target: '3',
+    targetHandle: 'convo',
+  },
+  {
+    id: 'e4',
+    source: '2',
+    sourceHandle: 'action',
+    target: '4',
     targetHandle: 'convo',
   },
 ];

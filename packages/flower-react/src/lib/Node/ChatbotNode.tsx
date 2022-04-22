@@ -51,7 +51,7 @@ export const ChatbotNode = memo<NodeProps>(({ data, isConnectable }) => {
           })))}
         </div>
         <div className={styles['interface']}>
-          {createElement(nodeInterfaceTag, { ...nodeImpl.internalState })}
+          {createElement(nodeInterfaceTag, { nodestate: JSON.stringify(nodeImpl.internalState) })}
         </div>
         <div className={styles['portWrapper']}>
           {nodeImpl.outputs && renderPorts(nodeImpl.outputs.map(portDefinition => ({
